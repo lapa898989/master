@@ -1,4 +1,4 @@
-# Creates GitHub repo if missing, then git push. Needs a PAT with "repo" scope:
+# Creates GitHub repo if missing, then git push. PAT needs "repo" scope:
 # https://github.com/settings/tokens
 #
 #   $env:GITHUB_TOKEN = "ghp_xxxx"
@@ -30,19 +30,44 @@ $headers = @{
   "User-Agent"  = "ServiceDrive-push-script"
 }
 
-try {
-  Invoke-RestMethod -Uri "https://api.github.com/repos/$owner/$repo" -Headers $headers -Method Get | Out-Null
-  Write-Host "Repo $owner/$repo already exists."
-} catch {
-  Write-Host "Creating repo $owner/$repo ..."
-  $body = @{ name = $repo; private = $false; auto_init = $false } | ConvertTo-Json
-  Invoke-RestMethod -Uri "https://api.github.com/user/repos" -Headers $headers -Method Post -Body $body -ContentType "application/json" | Out-Null
+$me = Invoke-RestMethod -Uri "https://api.github.com/user" -Headers $headers -Method Get
+if ($me.login -ne $owner) {
+  Write-Host ("Warning: GITHUB_OWNER is " + $owner + " but token is for " + $me.login + ". Using " + $me.login + ".") -ForegroundColor Yellow
+  $owner = $me.login
 }
 
-& $mingit remote remove origin 2>$null
+$repoMissing = $false
+try {
+  Invoke-RestMethod -Uri "https://api.github.com/repos/$owner/$repo" -Headers $headers -Method Get | Out-Null
+  Write-Host ("Repo " + $owner + "/" + $repo + " exists.")
+} catch {
+  $repoMissing = $true
+}
+
+if ($repoMissing) {
+  Write-Host ("Creating repo " + $owner + "/" + $repo + " ...")
+  $body = @{ name = $repo; private = $false; auto_init = $false } | ConvertTo-Json
+  try {
+    Invoke-RestMethod -Uri "https://api.github.com/user/repos" -Headers $headers -Method Post -Body $body -ContentType "application/json" | Out-Null
+  } catch {
+    $details = $_.ErrorDetails.Message
+    if ($details -match "already exists") {
+      Write-Host "Repo name already exists on this account. Pushing to it."
+    } else {
+      throw
+    }
+  }
+}
+
+$remoteList = @(& $mingit remote 2>$null)
+if ($remoteList -contains "origin") {
+  & $mingit remote remove origin
+}
+
 $remoteUrl = "https://x-access-token:$token@github.com/$owner/$repo.git"
 & $mingit remote add origin $remoteUrl
 & $mingit branch -M main
 & $mingit push -u origin main
 
-Write-Host "Done: https://github.com/$owner/$repo" -ForegroundColor Green
+$doneUrl = "https://github.com/" + $owner + "/" + $repo
+Write-Host ("Done: " + $doneUrl) -ForegroundColor Green
