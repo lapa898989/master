@@ -1,0 +1,31 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
+export type AppRole = "client" | "master" | "admin";
+
+export async function getCurrentProfile() {
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("id, role, full_name, city, is_banned")
+    .eq("id", user.id)
+    .single();
+
+  return data;
+}
+
+export async function requireRole(roles: AppRole[]) {
+  const profile = await getCurrentProfile();
+  if (!profile || profile.is_banned || !roles.includes(profile.role as AppRole)) {
+    redirect("/auth/login");
+  }
+  return profile;
+}

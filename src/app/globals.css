@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply text-slate-900;
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(16, 185, 129, 0.20), transparent 60%),
+    radial-gradient(900px 500px at 85% 15%, rgba(52, 211, 153, 0.16), transparent 60%),
+    radial-gradient(1200px 700px at 50% 90%, rgba(15, 118, 110, 0.10), transparent 65%),
+    linear-gradient(180deg, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 100%);
+}
+
+/* Liquid glass helpers */
+.glass {
+  @apply border border-emerald-900/10 bg-white/40 backdrop-blur-xl;
+}
+
+.glass-strong {
+  @apply border border-emerald-900/15 bg-white/50 backdrop-blur-2xl;
+}
+
+.glass-card {
+  @apply glass rounded-2xl;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.45) inset,
+    0 18px 50px rgba(2, 6, 23, 0.12),
+    0 0 40px rgba(16, 185, 129, 0.10);
+}
+
+.glass-button {
+  @apply rounded-lg border border-emerald-900/10 bg-white/40 px-4 py-2 text-sm font-medium text-slate-900 backdrop-blur-xl transition;
+}
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+.glass-button-primary {
+  @apply rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition;
+  box-shadow: 0 16px 40px rgba(16, 185, 129, 0.22);
+}
+.glass-button-primary:hover {
+  background: rgb(5 150 105 / 0.92);
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: fadeUp 420ms ease-out both;
+}
+
+.hover-lift {
+  transition: transform 180ms ease, background 180ms ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.glass-card {
+  position: relative;
+}
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(600px 220px at 20% 10%, rgba(52, 211, 153, 0.22), transparent 55%);
+  opacity: 0.75;
+}
+.glass-card > * {
+  position: relative;
+}
+
+@keyframes floaty {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.floaty {
+  animation: floaty 6s ease-in-out infinite;
+}
+
+.card-glow {
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.12), 0 0 32px rgba(99, 102, 241, 0.12);
+}
+
+@keyframes aiAurora {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate3d(-34px, 28px, 0) scale(1.16);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes aiOrbit {
+  0% {
+    transform: rotate(0deg) translateX(0);
+  }
+  50% {
+    transform: rotate(12deg) translateX(18px);
+  }
+  100% {
+    transform: rotate(0deg) translateX(0);
+  }
+}
+
+@keyframes aiScan {
+  0% {
+    box-shadow: inset 0 -80px 80px rgba(16, 185, 129, 0);
+  }
+  50% {
+    box-shadow: inset 0 -80px 80px rgba(16, 185, 129, 0.14);
+  }
+  100% {
+    box-shadow: inset 0 -80px 80px rgba(16, 185, 129, 0);
+  }
+}
+
+.ai-aurora {
+  animation: aiAurora 8s ease-in-out infinite;
+}
+
+.ai-orbit {
+  animation: aiOrbit 10s ease-in-out infinite;
+}
+
+.ai-card-scan {
+  animation: aiScan 4.8s ease-in-out infinite;
+}
