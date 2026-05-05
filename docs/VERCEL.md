@@ -27,6 +27,8 @@
 
 6. Нажмите **Deploy**.
 
+Подробнее про переменные и скрипт: [VERCEL-ENV.md](./VERCEL-ENV.md).
+
 ## 3. Настройка Supabase Auth
 
 В панели Supabase: **Authentication → URL Configuration**:
