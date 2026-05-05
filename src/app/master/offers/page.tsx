@@ -32,7 +32,7 @@ export default async function MasterOffersPage() {
               </p>
               {request ? (
                 <div className="mt-2 flex gap-3">
-                  <Link href={`/client/requests/${request.id}`} className="text-sm text-indigo-300 hover:text-indigo-200">
+                  <Link href={`/master/requests/${request.id}`} className="text-sm text-indigo-300 hover:text-indigo-200">
                     Открыть заявку
                   </Link>
                   {request.status === "in_progress" ? (
