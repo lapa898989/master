@@ -4,8 +4,8 @@ from sqlalchemy import and_, func
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.enums import UserRole
-from app.models.user import User
+from backend.models.enums import UserRole
+from backend.models.user import User
 
 
 class UsersRepo:

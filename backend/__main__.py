@@ -8,15 +8,15 @@ from aiogram.fsm.storage.redis import RedisStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sqlalchemy import select
 
-from app.bot.handlers import router as bot_router
-from app.bot.middlewares import DbSessionMiddleware
-from app.config import settings
-from app.db import SessionLocal
-from app.logging import log, setup_logging
-from app.models.enums import OrderStatus
-from app.models.order import Order
-from app.services.bootstrap import ensure_categories
-from app.web.app import create_app
+from backend.bot.handlers import router as bot_router
+from backend.bot.middlewares import DbSessionMiddleware
+from backend.config import settings
+from backend.db import SessionLocal
+from backend.logging import log, setup_logging
+from backend.models.enums import OrderStatus
+from backend.models.order import Order
+from backend.services.bootstrap import ensure_categories
+from backend.web.app import create_app
 
 
 async def _bootstrap() -> None:
@@ -27,8 +27,8 @@ async def _bootstrap() -> None:
 
 async def _autocomplete_finished_orders(bot: Bot) -> None:
     async with SessionLocal() as session:
-        from app.repos.orders import OrdersRepo
-        from app.models.user import User
+        from backend.repos.orders import OrdersRepo
+        from backend.models.user import User
 
         orders_repo = OrdersRepo(session)
         pending = await orders_repo.list_pending_autocomplete()

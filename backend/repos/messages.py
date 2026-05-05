@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.message import Message
+from backend.models.message import Message
 
 
 class MessagesRepo:

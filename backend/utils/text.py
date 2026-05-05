@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.models.enums import OrderStatus, UserRole
+from backend.models.enums import OrderStatus, UserRole
 
 
 def role_label(role: UserRole | None) -> str:

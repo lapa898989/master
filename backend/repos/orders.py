@@ -5,8 +5,8 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import and_, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.enums import OrderStatus
-from app.models.order import Order
+from backend.models.enums import OrderStatus
+from backend.models.order import Order
 
 
 class OrdersRepo:

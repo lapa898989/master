@@ -8,8 +8,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Contact, Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.bot.callbacks import BidCb, CategoryCb, OrderCb, ReviewCb, RoleCb
-from app.bot.keyboards import (
+from backend.bot.callbacks import BidCb, CategoryCb, OrderCb, ReviewCb, RoleCb
+from backend.bot.keyboards import (
     bid_action_kb,
     categories_kb,
     confirm_order_kb,
@@ -23,17 +23,17 @@ from app.bot.keyboards import (
     role_kb,
     worker_categories_kb,
 )
-from app.bot.states import BidSG, ChatSG, NewOrderSG, RegistrationSG, ReviewSG, WorkerCatsSG
-from app.config import settings
-from app.models.enums import OrderStatus, UserRole
-from app.repos.bids import BidAlreadyExists, BidsRepo
-from app.repos.categories import CategoriesRepo
-from app.repos.messages import MessagesRepo
-from app.repos.orders import OrdersRepo
-from app.repos.reviews import ReviewsRepo
-from app.repos.users import UsersRepo
-from app.utils.datetime_parse import parse_dt_ru
-from app.utils.text import order_status_label, role_label
+from backend.bot.states import BidSG, ChatSG, NewOrderSG, RegistrationSG, ReviewSG, WorkerCatsSG
+from backend.config import settings
+from backend.models.enums import OrderStatus, UserRole
+from backend.repos.bids import BidAlreadyExists, BidsRepo
+from backend.repos.categories import CategoriesRepo
+from backend.repos.messages import MessagesRepo
+from backend.repos.orders import OrdersRepo
+from backend.repos.reviews import ReviewsRepo
+from backend.repos.users import UsersRepo
+from backend.utils.datetime_parse import parse_dt_ru
+from backend.utils.text import order_status_label, role_label
 
 
 router = Router()
@@ -456,7 +456,7 @@ async def choose_worker_cmd(message: Message, session: AsyncSession):
     await BidsRepo(session).accept_for_order(order_id, worker_id)
 
     # send contacts + chat access
-    from app.models.user import User as UserModel
+    from backend.models.user import User as UserModel
 
     worker = await session.get(UserModel, worker_id)
     if worker:
@@ -544,7 +544,7 @@ async def bid_accept(cb: CallbackQuery, callback_data: BidCb, session: AsyncSess
     await cb.answer()
     # notify customer
     try:
-        from app.models.user import User as UserModel
+        from backend.models.user import User as UserModel
 
         customer = await session.get(UserModel, order.customer_id)
         if customer:
@@ -628,7 +628,7 @@ async def _finalize_bid(message: Message, state: FSMContext, session: AsyncSessi
     await message.answer("Отклик отправлен.")
     await state.clear()
     try:
-        from app.models.user import User as UserModel
+        from backend.models.user import User as UserModel
 
         customer = await session.get(UserModel, order.customer_id)
         if customer:
@@ -688,7 +688,7 @@ async def _relay_chat(message: Message, state: FSMContext, session: AsyncSession
     if not other_id:
         await message.answer("Вторая сторона ещё не выбрана.")
         return
-    from app.models.user import User as UserModel
+    from backend.models.user import User as UserModel
 
     other = await session.get(UserModel, other_id)
     if not other:
@@ -757,7 +757,7 @@ async def order_status_actions(cb: CallbackQuery, callback_data: OrderCb, sessio
 
 
 async def _ask_reviews(cb: CallbackQuery, session: AsyncSession, order):
-    from app.models.user import User as UserModel
+    from backend.models.user import User as UserModel
 
     customer = await session.get(UserModel, order.customer_id)
     worker = await session.get(UserModel, order.selected_worker_id) if order.selected_worker_id else None
@@ -811,7 +811,7 @@ async def _finalize_review(message: Message, state: FSMContext, session: AsyncSe
     rating = int(data["rating"])
     await ReviewsRepo(session).create(order_id=order_id, from_user_id=user.id, to_user_id=to_user_id, rating=rating, comment=comment)
     avg = await ReviewsRepo(session).avg_rating_for_user(to_user_id)
-    from app.models.user import User as UserModel
+    from backend.models.user import User as UserModel
 
     to_user = await session.get(UserModel, to_user_id)
     add_completed = 1 if (to_user and to_user.role == UserRole.worker) else 0

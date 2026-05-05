@@ -6,7 +6,7 @@ from typing import Any
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 
-from app.db import SessionLocal
+from backend.db import SessionLocal
 
 
 class DbSessionMiddleware(BaseMiddleware):

@@ -9,8 +9,8 @@ from aiogram.types import (
 )
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from app.bot.callbacks import BidCb, CategoryCb, OrderCb, RoleCb, ReviewCb
-from app.models.category import Category
+from backend.bot.callbacks import BidCb, CategoryCb, OrderCb, RoleCb, ReviewCb
+from backend.models.category import Category
 
 
 def role_kb() -> InlineKeyboardMarkup:

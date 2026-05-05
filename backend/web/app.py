@@ -7,12 +7,12 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import settings
-from app.db import SessionLocal
-from app.models.category import Category
-from app.models.order import Order
-from app.models.review import Review
-from app.models.user import User
+from backend.config import settings
+from backend.db import SessionLocal
+from backend.models.category import Category
+from backend.models.order import Order
+from backend.models.review import Review
+from backend.models.user import User
 
 
 security = HTTPBasic()

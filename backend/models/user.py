@@ -5,8 +5,8 @@ from datetime import datetime
 from sqlalchemy import BigInteger, Boolean, DateTime, Enum, Float, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.models.base import Base
-from app.models.enums import UserRole
+from backend.models.base import Base
+from backend.models.enums import UserRole
 
 
 class User(Base):

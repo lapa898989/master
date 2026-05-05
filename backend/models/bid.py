@@ -5,8 +5,8 @@ from datetime import datetime
 from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.models.base import Base
-from app.models.enums import BidStatus
+from backend.models.base import Base
+from backend.models.enums import BidStatus
 
 
 class Bid(Base):

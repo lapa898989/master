@@ -6,8 +6,8 @@ from sqlalchemy import and_, func, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.bid import Bid
-from app.models.enums import BidStatus
+from backend.models.bid import Bid
+from backend.models.enums import BidStatus
 
 
 class BidAlreadyExists(Exception):

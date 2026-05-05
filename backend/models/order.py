@@ -5,8 +5,8 @@ from datetime import datetime
 from sqlalchemy import DateTime, Enum, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.models.base import Base
-from app.models.enums import OrderStatus
+from backend.models.base import Base
+from backend.models.enums import OrderStatus
 
 
 class Order(Base):
