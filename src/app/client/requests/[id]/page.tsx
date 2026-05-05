@@ -55,19 +55,19 @@ export default async function ClientRequestDetailsPage({
   return (
     <section className="space-y-4">
       <RequestOffersLive requestId={requestId} />
-      {s.accepted ? <p className="rounded-xl px-3 py-2 text-sm text-emerald-200 stage-card">Исполнитель успешно выбран.</p> : null}
-      {s.error ? <p className="rounded-xl px-3 py-2 text-sm text-rose-200 stage-card">Не удалось выбрать отклик. Попробуйте еще раз.</p> : null}
+      {s.accepted ? <p className="rounded-xl px-3 py-2 text-sm text-emerald-700 stage-card-light">Исполнитель успешно выбран.</p> : null}
+      {s.error ? <p className="rounded-xl px-3 py-2 text-sm text-red-700 stage-card-light">Не удалось выбрать отклик. Попробуйте еще раз.</p> : null}
       {s.budget_ok ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-emerald-200 stage-card">Максимум бюджета обновлён — мастера видят новую вилку.</p>
+        <p className="rounded-xl px-3 py-2 text-sm text-emerald-700 stage-card-light">Максимум бюджета обновлён — мастера видят новую вилку.</p>
       ) : null}
       {s.budget_error === "min" ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-rose-200 stage-card">Новый максимум не может быть меньше минимума заявки.</p>
+        <p className="rounded-xl px-3 py-2 text-sm text-red-700 stage-card-light">Новый максимум не может быть меньше минимума заявки.</p>
       ) : null}
       {s.budget_error === "lower" ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-rose-200 stage-card">Новый максимум должен быть не ниже текущего — это «поднять ставку», как в InDrive.</p>
+        <p className="rounded-xl px-3 py-2 text-sm text-red-700 stage-card-light">Новый максимум должен быть не ниже текущего — это «поднять ставку», как в InDrive.</p>
       ) : null}
       {s.budget_error === "1" ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-rose-200 stage-card">Не удалось обновить бюджет. Проверьте значение и статус заявки.</p>
+        <p className="rounded-xl px-3 py-2 text-sm text-red-700 stage-card-light">Не удалось обновить бюджет. Проверьте значение и статус заявки.</p>
       ) : null}
       <h1 className="text-2xl font-semibold">{request.title}</h1>
       <p className="text-sm text-slate-600">
@@ -118,7 +118,7 @@ export default async function ClientRequestDetailsPage({
           ))}
         </div>
       ) : null}
-      <p className="text-sm text-slate-300">Статус: {request.status}</p>
+      <p className="text-sm text-slate-600">Статус: {request.status}</p>
       {assignment ? (
         <Link href={`/chat/${requestId}`} className="inline-block stage-button-primary">
           Открыть чат с мастером

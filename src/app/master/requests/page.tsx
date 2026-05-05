@@ -38,7 +38,7 @@ export default async function MasterRequestsPage(props: {
         Логика как в InDrive: у клиента вилка бюджета — вы предлагаете свою цену и время; клиент сравнивает предложения на шкале.
       </p>
       {searchParams.sent ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-emerald-200 stage-card">
+        <p className="rounded-xl px-3 py-2 text-sm text-emerald-700 stage-card-light">
           Отклик по заявке #{searchParams.sent} отправлен. Можете предложить цену по другим заказам ниже.
         </p>
       ) : null}

@@ -39,7 +39,7 @@ export default async function MasterRequestDetailsPage({ params }: { params: Pro
           <p className="text-xs text-slate-500">Статус: {request.status}</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/master/offers" className="stage-button">
+          <Link href="/master/offers" className="stage-button-light">
             Назад к откликам
           </Link>
           {assignment && request.status === "in_progress" ? (

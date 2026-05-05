@@ -48,6 +48,20 @@ body {
   background: rgb(251 191 36 / 0.92);
 }
 
+.stage-button-light {
+  @apply rounded-xl border border-slate-200/70 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-900 backdrop-blur-xl transition;
+}
+.stage-button-light:hover {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.stage-button-ghost {
+  @apply rounded-xl border border-slate-200/70 bg-transparent px-4 py-2 text-sm font-semibold text-slate-900 transition;
+}
+.stage-button-ghost:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
 .stage-input {
   @apply w-full rounded-xl border border-white/15 bg-white/5 p-3 text-white outline-none placeholder:text-slate-400;
 }
