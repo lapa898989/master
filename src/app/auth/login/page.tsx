@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -90,5 +90,19 @@ export default function LoginPage() {
         </span>
       </div>
     </section>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <section className="mx-auto max-w-md space-y-4 p-6 glass-card">
+          <p className="text-slate-600">Загрузка…</p>
+        </section>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

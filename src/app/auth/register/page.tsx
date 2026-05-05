@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
 
 import { createClient } from "@/lib/supabase/client";
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialError = useMemo(() => searchParams.get("error"), [searchParams]);
@@ -128,5 +128,19 @@ export default function RegisterPage() {
         </button>
       </form>
     </section>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <section className="mx-auto max-w-md space-y-4 p-6 glass-card">
+          <p className="text-slate-600">Загрузка…</p>
+        </section>
+      }
+    >
+      <RegisterForm />
+    </Suspense>
   );
 }
