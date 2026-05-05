@@ -24,6 +24,14 @@ powershell -ExecutionPolicy Bypass -File .\scripts\push-to-github.ps1
 
 Скрипт при необходимости **создаст** публичный репозиторий `GITHUB_REPO` и выполнит `git push`.
 
+После успешного push можно убрать токен из URL remote (токен окажется в `.git/config`):
+
+```powershell
+.\scripts\ensure-git.ps1
+$g = ".\.tools\mingit\cmd\git.exe"
+& $g remote set-url origin https://github.com/ВАШ_ЛОГИН/ИМЯ_РЕПО.git
+```
+
 ## Если репозиторий уже создан вручную на сайте
 
 Достаточно тех же переменных и `push-to-github.ps1` (или добавьте remote и `git push` сами).
