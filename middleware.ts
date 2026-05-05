@@ -8,7 +8,8 @@ type CookieToSet = {
 };
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({ request: { headers: request.headers } });
+  // Must pass full `request` — passing only headers breaks App Router matching (404 on Vercel).
+  let response = NextResponse.next({ request });
 
   if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) {
     const origin = request.headers.get("origin");
@@ -39,7 +40,7 @@ export async function middleware(request: NextRequest) {
         return request.cookies.getAll();
       },
       setAll(cookiesToSet: CookieToSet[]) {
-        response = NextResponse.next({ request: { headers: request.headers } });
+        response = NextResponse.next({ request });
         cookiesToSet.forEach(({ name, value, options }) => {
           response.cookies.set(name, value, options);
         });
@@ -51,12 +52,14 @@ export async function middleware(request: NextRequest) {
     await supabase.auth.getUser();
   } catch (e) {
     console.error("middleware: supabase.auth.getUser failed", e);
-    return NextResponse.next({ request: { headers: request.headers } });
+    return NextResponse.next({ request });
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"]
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"
+  ]
 };
