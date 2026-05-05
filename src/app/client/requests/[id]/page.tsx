@@ -4,6 +4,7 @@ import { BudgetOfferBar } from "@/components/budget-offer-bar";
 import { requireRole } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { RequestPhotoThumbnail } from "@/components/request-photo-thumbnail";
 
 export default async function ClientRequestDetailsPage({
   params,
@@ -154,9 +155,4 @@ export default async function ClientRequestDetailsPage({
       </div>
     </section>
   );
-}
-
-function RequestPhotoThumbnail({ src }: { src: string }) {
-  // eslint-disable-next-line @next/next/no-img-element -- user-supplied URL, any host
-  return <img src={src} alt="Фото заявки" className="h-36 w-full object-cover" />;
 }
