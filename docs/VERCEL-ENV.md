@@ -11,6 +11,7 @@
 |------|--------|----------------|
 | `NEXT_PUBLIC_SUPABASE_URL` | из Supabase → **Settings → API → Project URL** | Production, Preview, Development |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | из Supabase → **anon public** | Production, Preview, Development |
+| *(или)* `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | если у вас ключ хранится под таким именем | Production, Preview, Development |
 
 3. **Save**, затем **Deployments** → последний деплой → **⋯** → **Redeploy** (чтобы билд подхватил переменные).
 
