@@ -112,7 +112,7 @@ export default async function ClientRequestDetailsPage({
         <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
           {photos.map((photo) => (
             <a key={photo.id} href={photo.photo_url} target="_blank" rel="noreferrer" className="block overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-              <img src={photo.photo_url} alt="Фото заявки" className="h-36 w-full object-cover" />
+              <RequestPhotoThumbnail src={photo.photo_url} />
             </a>
           ))}
         </div>
@@ -154,4 +154,9 @@ export default async function ClientRequestDetailsPage({
       </div>
     </section>
   );
+}
+
+function RequestPhotoThumbnail({ src }: { src: string }) {
+  // eslint-disable-next-line @next/next/no-img-element -- user-supplied URL, any host
+  return <img src={src} alt="Фото заявки" className="h-36 w-full object-cover" />;
 }

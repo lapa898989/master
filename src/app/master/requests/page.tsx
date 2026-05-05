@@ -7,7 +7,7 @@ export default async function MasterRequestsPage(props: {
   searchParams: Promise<{ category?: string; city?: string; error?: string; sent?: string }>;
 }) {
   const searchParams = await props.searchParams;
-  const profile = await requireRole(["master"]);
+  await requireRole(["master"]);
   const supabase = await createClient();
   const selectedCategory = Number(searchParams.category ?? 0);
   const selectedCity = String(searchParams.city ?? "").trim();
