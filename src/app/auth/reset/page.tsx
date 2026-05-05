@@ -41,14 +41,14 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <section className="mx-auto max-w-md space-y-4 p-6 glass-card">
-      <h1 className="text-2xl font-semibold">Новый пароль</h1>
-      <p className="text-sm text-slate-700">Откройте эту страницу через ссылку из письма, затем задайте новый пароль.</p>
-      {status ? <p className="text-sm text-emerald-700">{status}</p> : null}
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+    <section className="mx-auto max-w-md space-y-4 p-6 stage-card">
+      <h1 className="text-2xl font-semibold text-amber-200">Новый пароль</h1>
+      <p className="text-sm text-white/70">Откройте эту страницу через ссылку из письма, затем задайте новый пароль.</p>
+      {status ? <p className="text-sm text-emerald-200">{status}</p> : null}
+      {error ? <p className="text-sm text-rose-200">{error}</p> : null}
       <form onSubmit={onSubmit} className="space-y-3">
         <div className="space-y-1">
-          <label className="text-sm text-slate-700" htmlFor="password">
+          <label className="text-sm text-white/80" htmlFor="password">
             Новый пароль
           </label>
           <input
@@ -59,11 +59,11 @@ export default function ResetPasswordPage() {
             minLength={8}
             autoComplete="new-password"
             required
-            className="w-full rounded-lg border border-emerald-900/10 bg-white/40 p-3 text-slate-900 outline-none"
+            className="stage-input"
           />
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-slate-700" htmlFor="password2">
+          <label className="text-sm text-white/80" htmlFor="password2">
             Повторите пароль
           </label>
           <input
@@ -74,14 +74,14 @@ export default function ResetPasswordPage() {
             minLength={8}
             autoComplete="new-password"
             required
-            className="w-full rounded-lg border border-emerald-900/10 bg-white/40 p-3 text-slate-900 outline-none"
+            className="stage-input"
           />
         </div>
-        <button disabled={loading} type="submit" className="w-full glass-button-primary py-3 disabled:opacity-60">
+        <button disabled={loading} type="submit" className="w-full stage-button-primary py-3 disabled:opacity-60">
           {loading ? "Сохраняем..." : "Сохранить пароль"}
         </button>
       </form>
-      <Link className="text-sm text-emerald-700 underline" href="/auth/login">
+      <Link className="text-sm text-amber-200 underline" href="/auth/login">
         Перейти ко входу
       </Link>
     </section>

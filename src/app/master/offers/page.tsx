@@ -25,18 +25,18 @@ export default async function MasterOffersPage() {
         {offers?.map((offer) => {
           const request = requestsById.get(offer.request_id) ?? null;
           return (
-            <article key={offer.id} className="p-4 glass-card">
+            <article key={offer.id} className="p-4 stage-card-light">
               <p className="font-medium">{request?.title ?? "Заявка недоступна"}</p>
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-slate-600">
                 Статус отклика: {offer.status}, цена: {offer.price}
               </p>
               {request ? (
                 <div className="mt-2 flex gap-3">
-                  <Link href={`/master/requests/${request.id}`} className="text-sm text-indigo-300 hover:text-indigo-200">
+                  <Link href={`/master/requests/${request.id}`} className="text-sm font-semibold text-slate-900 underline decoration-slate-400/50 hover:decoration-slate-900">
                     Открыть заявку
                   </Link>
                   {request.status === "in_progress" ? (
-                    <Link href={`/chat/${request.id}`} className="text-sm text-slate-100 hover:text-white">
+                    <Link href={`/chat/${request.id}`} className="text-sm text-slate-900 hover:text-black">
                       Чат по заказу
                     </Link>
                   ) : null}

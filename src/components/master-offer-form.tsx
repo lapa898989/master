@@ -17,8 +17,7 @@ export function MasterOfferForm({
   const [price, setPrice] = useState(mid);
   const safePrice = useMemo(() => (Number.isFinite(price) && price > 0 ? price : mid), [price, mid]);
 
-  const inputClass =
-    "rounded-lg border border-emerald-900/10 bg-white/50 p-3 text-slate-900 outline-none placeholder:text-slate-500";
+  const inputClass = "stage-input-light";
 
   return (
     <div className="space-y-3">
@@ -60,7 +59,7 @@ export function MasterOfferForm({
         />
         <input name="eta_minutes" type="number" min={10} required placeholder="Минут до выезда" className={inputClass} />
         <input name="comment" required placeholder="Комментарий (оборудование, нюансы)" className={inputClass} />
-        <button type="submit" className="glass-button-primary py-3 md:col-span-3">
+        <button type="submit" className="stage-button-primary py-3 md:col-span-3">
           Отправить цену (повторно — обновит отклик)
         </button>
       </form>

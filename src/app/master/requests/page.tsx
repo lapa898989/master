@@ -38,20 +38,20 @@ export default async function MasterRequestsPage(props: {
         Логика как в InDrive: у клиента вилка бюджета — вы предлагаете свою цену и время; клиент сравнивает предложения на шкале.
       </p>
       {searchParams.sent ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-emerald-800 glass">
+        <p className="rounded-xl px-3 py-2 text-sm text-emerald-200 stage-card">
           Отклик по заявке #{searchParams.sent} отправлен. Можете предложить цену по другим заказам ниже.
         </p>
       ) : null}
       {searchParams.error ? <p className="text-sm text-red-300">{decodeURIComponent(searchParams.error)}</p> : null}
       <div className="flex flex-wrap gap-2">
-        <Link href="/master/requests" className={`rounded px-3 py-1 text-sm ${selectedCategory ? "glass" : "bg-indigo-600 text-white"}`}>
+        <Link href="/master/requests" className={`rounded px-3 py-1 text-sm ${selectedCategory ? "stage-card-light" : "bg-slate-950 text-amber-200"}`}>
           Все категории
         </Link>
         {categories?.map((c) => (
           <Link
             key={c.id}
             href={`/master/requests?category=${c.id}`}
-            className={`rounded px-3 py-1 text-sm ${selectedCategory === c.id ? "bg-indigo-600 text-white" : "glass"}`}
+            className={`rounded px-3 py-1 text-sm ${selectedCategory === c.id ? "bg-slate-950 text-amber-200" : "stage-card-light"}`}
           >
             {c.name}
           </Link>
@@ -61,7 +61,7 @@ export default async function MasterRequestsPage(props: {
         <span className="text-xs text-slate-400">Город:</span>
         <Link
           href={`/master/requests${selectedCategory ? `?category=${selectedCategory}` : ""}`}
-          className={`rounded px-3 py-1 text-sm ${selectedCity ? "border border-slate-700 bg-slate-950/40" : "bg-indigo-600 text-white"}`}
+          className={`rounded px-3 py-1 text-sm ${selectedCity ? "stage-card-light" : "bg-slate-950 text-amber-200"}`}
         >
           Все
         </Link>
@@ -74,7 +74,7 @@ export default async function MasterRequestsPage(props: {
               key={city}
               href={`/master/requests?${params.toString()}`}
               className={`rounded border px-3 py-1 text-sm ${
-                selectedCity === city ? "border-indigo-500/60 bg-indigo-600/20 text-indigo-200" : "border-slate-800 bg-slate-950/40 text-slate-200 hover:bg-slate-900"
+                selectedCity === city ? "border-amber-400/40 bg-amber-300/20 text-amber-900" : "border-slate-200/70 bg-white/70 text-slate-800 hover:bg-white"
               }`}
             >
               {city}
@@ -90,13 +90,13 @@ export default async function MasterRequestsPage(props: {
               : "-";
 
           return (
-            <article key={request.id} className="p-4 glass-card">
+            <article key={request.id} className="p-4 stage-card-light">
               <p className="font-medium">{request.title}</p>
-              <p className="text-xs text-slate-400">Категория: {categoryName}</p>
-            <p className="text-sm text-slate-300">{request.description}</p>
-            <p className="text-sm text-slate-200">
-              Бюджет: {request.budget_min}-{request.budget_max} RUB
-            </p>
+              <p className="text-xs text-slate-500">Категория: {categoryName}</p>
+              <p className="text-sm text-slate-700">{request.description}</p>
+              <p className="text-sm text-slate-900">
+                Бюджет: <b>{request.budget_min}-{request.budget_max} RUB</b>
+              </p>
             <div className="mt-3">
               <MasterOfferForm requestId={request.id} budgetMin={request.budget_min} budgetMax={request.budget_max} />
             </div>

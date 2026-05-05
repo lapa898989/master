@@ -72,58 +72,62 @@ function RegisterForm() {
   }
 
   return (
-    <section className="mx-auto max-w-md space-y-4 p-6 glass-card">
-      <h1 className="text-2xl font-semibold">Регистрация</h1>
-      {initialError ? <p className="text-sm text-red-600">{decodeURIComponent(initialError)}</p> : null}
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+    <section className="mx-auto max-w-md space-y-4 p-6 stage-card">
+      <h1 className="text-2xl font-semibold text-amber-200">Регистрация</h1>
+      {initialError ? <p className="text-sm text-rose-200">{decodeURIComponent(initialError)}</p> : null}
+      {error ? <p className="text-sm text-rose-200">{error}</p> : null}
       <form onSubmit={onSubmit} className="space-y-3">
         <div className="space-y-1">
-          <label className="text-sm text-slate-700" htmlFor="full_name">
+          <label className="text-sm text-white/80" htmlFor="full_name">
             Имя
           </label>
-          <input id="full_name" name="full_name" required className="w-full rounded-lg border border-emerald-900/10 bg-white/40 p-3 text-slate-900 outline-none" />
+          <input id="full_name" name="full_name" required className="stage-input" />
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-slate-700" htmlFor="city">
+          <label className="text-sm text-white/80" htmlFor="city">
             Город
           </label>
-          <input id="city" name="city" required className="w-full rounded-lg border border-emerald-900/10 bg-white/40 p-3 text-slate-900 outline-none" />
+          <input id="city" name="city" required className="stage-input" />
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-slate-700" htmlFor="role">
+          <label className="text-sm text-white/80" htmlFor="role">
             Я —
           </label>
-          <select id="role" name="role" className="w-full rounded-lg border border-emerald-900/10 bg-white/40 p-3 text-slate-900 outline-none">
-          <option value="client">Клиент</option>
-          <option value="master">Мастер</option>
-        </select>
+          <select id="role" name="role" className="stage-input">
+            <option className="text-slate-900" value="client">
+              Клиент
+            </option>
+            <option className="text-slate-900" value="master">
+              Мастер
+            </option>
+          </select>
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-slate-700" htmlFor="email">
+          <label className="text-sm text-white/80" htmlFor="email">
             Email
           </label>
-          <input id="email" name="email" type="email" autoComplete="email" required className="w-full rounded-lg border border-emerald-900/10 bg-white/40 p-3 text-slate-900 outline-none" />
+          <input id="email" name="email" type="email" autoComplete="email" required className="stage-input" />
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-slate-700" htmlFor="password">
+          <label className="text-sm text-white/80" htmlFor="password">
             Пароль (минимум 8 символов)
           </label>
-          <input id="password" name="password" type="password" minLength={8} autoComplete="new-password" required className="w-full rounded-lg border border-emerald-900/10 bg-white/40 p-3 text-slate-900 outline-none" />
+          <input id="password" name="password" type="password" minLength={8} autoComplete="new-password" required className="stage-input" />
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-slate-700" htmlFor="password2">
+          <label className="text-sm text-white/80" htmlFor="password2">
             Повторите пароль
           </label>
-          <input id="password2" name="password2" type="password" minLength={8} autoComplete="new-password" required className="w-full rounded-lg border border-emerald-900/10 bg-white/40 p-3 text-slate-900 outline-none" />
+          <input id="password2" name="password2" type="password" minLength={8} autoComplete="new-password" required className="stage-input" />
         </div>
-        <label className="flex items-start gap-2 text-sm text-slate-700">
+        <label className="flex items-start gap-2 text-sm text-white/80">
           <input name="agree" value="1" type="checkbox" className="mt-1" required />
           <span>
-            Я согласен с <Link className="text-emerald-700 underline" href="/terms">условиями</Link> и{" "}
-            <Link className="text-emerald-700 underline" href="/privacy">политикой конфиденциальности</Link>.
+            Я согласен с <Link className="text-amber-200 underline" href="/terms">условиями</Link> и{" "}
+            <Link className="text-amber-200 underline" href="/privacy">политикой конфиденциальности</Link>.
           </span>
         </label>
-        <button disabled={loading} type="submit" className="w-full glass-button-primary py-3 disabled:opacity-60">
+        <button disabled={loading} type="submit" className="w-full stage-button-primary py-3 disabled:opacity-60">
           {loading ? "Создаём..." : "Создать аккаунт"}
         </button>
       </form>
@@ -135,8 +139,8 @@ export default function RegisterPage() {
   return (
     <Suspense
       fallback={
-        <section className="mx-auto max-w-md space-y-4 p-6 glass-card">
-          <p className="text-slate-600">Загрузка…</p>
+        <section className="mx-auto max-w-md space-y-4 p-6 stage-card">
+          <p className="text-white/70">Загрузка…</p>
         </section>
       }
     >

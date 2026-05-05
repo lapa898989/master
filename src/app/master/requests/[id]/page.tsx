@@ -39,18 +39,18 @@ export default async function MasterRequestDetailsPage({ params }: { params: Pro
           <p className="text-xs text-slate-500">Статус: {request.status}</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/master/offers" className="glass-button">
+          <Link href="/master/offers" className="stage-button">
             Назад к откликам
           </Link>
           {assignment && request.status === "in_progress" ? (
-            <Link href={`/chat/${requestId}`} className="glass-button-primary">
+            <Link href={`/chat/${requestId}`} className="stage-button-primary">
               Чат по заказу
             </Link>
           ) : null}
         </div>
       </div>
 
-      <article className="rounded-2xl p-4 glass-card space-y-2">
+      <article className="rounded-2xl p-4 stage-card-light space-y-2">
         <p className="text-sm font-medium text-slate-800">Описание</p>
         <p className="text-sm text-slate-700">{request.description}</p>
         <p className="text-sm text-slate-700">
@@ -61,7 +61,7 @@ export default async function MasterRequestDetailsPage({ params }: { params: Pro
         </p>
       </article>
 
-      <article className="rounded-2xl p-4 glass-card space-y-2">
+      <article className="rounded-2xl p-4 stage-card-light space-y-2">
         <p className="text-sm font-medium text-slate-800">Мой отклик</p>
         {myOffer ? (
           <>

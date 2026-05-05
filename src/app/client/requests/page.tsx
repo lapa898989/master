@@ -15,15 +15,15 @@ export default async function ClientRequestsPage() {
     <section className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Мои заявки</h1>
-        <Link href="/client/requests/new" className="glass-button-primary">
+        <Link href="/client/requests/new" className="stage-button-primary">
           Новая заявка
         </Link>
       </div>
       <div className="space-y-2">
         {requests?.map((item) => (
-          <Link key={item.id} href={`/client/requests/${item.id}`} className="block p-4 glass-card">
+          <Link key={item.id} href={`/client/requests/${item.id}`} className="block p-4 stage-card-light hover:-translate-y-0.5 transition">
             <p className="font-medium">{item.title}</p>
-            <p className="text-sm text-slate-300">
+            <p className="text-sm text-slate-600">
               {item.status} | {item.budget_min}-{item.budget_max} RUB
             </p>
           </Link>

@@ -55,19 +55,19 @@ export default async function ClientRequestDetailsPage({
   return (
     <section className="space-y-4">
       <RequestOffersLive requestId={requestId} />
-      {s.accepted ? <p className="rounded-xl px-3 py-2 text-sm text-green-200 glass">Исполнитель успешно выбран.</p> : null}
-      {s.error ? <p className="rounded-xl px-3 py-2 text-sm text-red-200 glass">Не удалось выбрать отклик. Попробуйте еще раз.</p> : null}
+      {s.accepted ? <p className="rounded-xl px-3 py-2 text-sm text-emerald-200 stage-card">Исполнитель успешно выбран.</p> : null}
+      {s.error ? <p className="rounded-xl px-3 py-2 text-sm text-rose-200 stage-card">Не удалось выбрать отклик. Попробуйте еще раз.</p> : null}
       {s.budget_ok ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-emerald-800 glass">Максимум бюджета обновлён — мастера видят новую вилку.</p>
+        <p className="rounded-xl px-3 py-2 text-sm text-emerald-200 stage-card">Максимум бюджета обновлён — мастера видят новую вилку.</p>
       ) : null}
       {s.budget_error === "min" ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-red-700 glass">Новый максимум не может быть меньше минимума заявки.</p>
+        <p className="rounded-xl px-3 py-2 text-sm text-rose-200 stage-card">Новый максимум не может быть меньше минимума заявки.</p>
       ) : null}
       {s.budget_error === "lower" ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-red-700 glass">Новый максимум должен быть не ниже текущего — это «поднять ставку», как в InDrive.</p>
+        <p className="rounded-xl px-3 py-2 text-sm text-rose-200 stage-card">Новый максимум должен быть не ниже текущего — это «поднять ставку», как в InDrive.</p>
       ) : null}
       {s.budget_error === "1" ? (
-        <p className="rounded-xl px-3 py-2 text-sm text-red-700 glass">Не удалось обновить бюджет. Проверьте значение и статус заявки.</p>
+        <p className="rounded-xl px-3 py-2 text-sm text-rose-200 stage-card">Не удалось обновить бюджет. Проверьте значение и статус заявки.</p>
       ) : null}
       <h1 className="text-2xl font-semibold">{request.title}</h1>
       <p className="text-sm text-slate-600">
@@ -78,7 +78,7 @@ export default async function ClientRequestDetailsPage({
         Удобное время:{" "}
         {request.desired_time ? new Date(request.desired_time).toLocaleString("ru-RU") : "—"}
       </p>
-      <div className="rounded-2xl p-4 glass-card space-y-3">
+      <div className="rounded-2xl p-4 stage-card-light space-y-3">
         <p className="text-sm font-medium text-slate-800">Ваша вилка бюджета (клиентский «диапазон цены»)</p>
         <BudgetOfferBar
           budgetMin={request.budget_min}
@@ -99,20 +99,20 @@ export default async function ClientRequestDetailsPage({
                 type="number"
                 min={request.budget_max}
                 defaultValue={request.budget_max}
-                className="rounded-lg border border-emerald-900/10 bg-white/60 p-2 text-slate-900"
+                className="stage-input-light"
               />
             </label>
-            <button type="submit" className="glass-button-primary px-4 py-2">
+            <button type="submit" className="stage-button-primary px-4 py-2">
               Обновить вилку
             </button>
           </form>
         ) : null}
       </div>
-      <p className="rounded-2xl p-4 glass-card">{request.description}</p>
+      <p className="rounded-2xl p-4 stage-card-light">{request.description}</p>
       {photos?.length ? (
         <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
           {photos.map((photo) => (
-            <a key={photo.id} href={photo.photo_url} target="_blank" rel="noreferrer" className="block overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+            <a key={photo.id} href={photo.photo_url} target="_blank" rel="noreferrer" className="block overflow-hidden rounded-2xl border border-slate-200/70 bg-white/70">
               <RequestPhotoThumbnail src={photo.photo_url} />
             </a>
           ))}
@@ -120,7 +120,7 @@ export default async function ClientRequestDetailsPage({
       ) : null}
       <p className="text-sm text-slate-300">Статус: {request.status}</p>
       {assignment ? (
-        <Link href={`/chat/${requestId}`} className="inline-block glass-button-primary">
+        <Link href={`/chat/${requestId}`} className="inline-block stage-button-primary">
           Открыть чат с мастером
         </Link>
       ) : null}
@@ -133,7 +133,7 @@ export default async function ClientRequestDetailsPage({
               : "Без имени";
 
           return (
-            <article key={offer.id} className="space-y-3 p-4 glass-card">
+            <article key={offer.id} className="space-y-3 p-4 stage-card-light">
               <p className="font-medium">Мастер: {masterName}</p>
             <BudgetOfferBar budgetMin={request.budget_min} budgetMax={request.budget_max} offerPrice={offer.price} />
             <p>
@@ -144,7 +144,7 @@ export default async function ClientRequestDetailsPage({
               <form action={acceptOfferAction} className="mt-3">
                 <input type="hidden" name="offer_id" value={offer.id} />
                 <input type="hidden" name="request_id" value={requestId} />
-                <button type="submit" className="glass-button-primary">
+                <button type="submit" className="stage-button-primary">
                   Выбрать мастера
                 </button>
               </form>
