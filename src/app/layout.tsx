@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { NotificationsNavLink } from "@/components/notifications-nav-link";
 import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -83,6 +84,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                   Админ
                 </Link>
               ) : null}
+              {user && profile && ["client", "master", "admin"].includes(profile.role) ? (
+                <NotificationsNavLink userId={user.id} />
+              ) : null}
               {user ? (
                 <div className="flex items-center gap-3">
                   <span className="hidden text-xs text-white/70 md:inline">{profile?.full_name ?? user.email}</span>
@@ -113,8 +117,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <div className="max-w-xl">
                 <p className="text-sm font-semibold text-amber-200">ServiceDrive</p>
                 <p className="mt-2 text-xs leading-5 text-white/70">
-                  Маркетплейс бытовых услуг в стиле inDrive: клиент публикует заявку с вилкой бюджета, мастера предлагают цену и ETA,
-                  вы выбираете исполнителя.
+                  Сервис бытовых услуг: вы публикуете заявку с диапазоном цены, мастера отвечают своей ценой и примерным временем
+                  приезда — вы выбираете исполнителя.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 text-xs">

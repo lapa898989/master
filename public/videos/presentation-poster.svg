@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="ServiceDrive">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="55%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#g)"/>
+  <circle cx="1050" cy="120" r="180" fill="#ffffff" opacity="0.08"/>
+  <circle cx="180" cy="560" r="220" fill="#ffffff" opacity="0.06"/>
+  <polygon points="520,260 520,460 740,360" fill="#fbbf24" opacity="0.9"/>
+  <text x="640" y="620" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,Segoe UI,sans-serif" font-size="28" font-weight="600">ServiceDrive  2845>?@575=B0F8O</text>
+</svg>

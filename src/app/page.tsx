@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getSiteUrl } from "@/lib/site-url";
+import { VideoPresentation } from "@/components/video-presentation";
 
 export default function Home() {
   const siteUrl = getSiteUrl();
@@ -24,11 +25,11 @@ export default function Home() {
             <p className="text-xs font-semibold tracking-[0.22em] text-amber-200/80">БЫСТРЫЙ ВЫБОР ИСПОЛНИТЕЛЯ</p>
             <h1 className="mt-3 text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
               ServiceDrive
-              <span className="block text-2xl font-medium text-slate-200/90 md:text-3xl">маркетплейс услуг в стиле inDrive</span>
+              <span className="block text-2xl font-medium text-slate-200/90 md:text-3xl">услуги рядом с домом — цену предлагают мастера</span>
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-6 text-slate-200/80 md:text-base">
-              Клиент публикует заявку с вилкой бюджета. Мастера предлагают свою цену и ETA — вы сравниваете предложения и выбираете
-              лучшее.
+              Вы описываете задачу и пишете, сколько готовы заплатить — от меньшей суммы до большей. Мастера отвечают своей ценой и
+              примерным временем приезда. Вы сравниваете предложения и выбираете удобный вариант.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/client/requests/new" className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400">
@@ -55,10 +56,10 @@ export default function Home() {
             <p className="text-xs font-semibold tracking-wide text-amber-200/90">Как это работает</p>
             <ol className="mt-4 space-y-3">
               {[
-                { t: "Публикация", d: "Опишите задачу, адрес, время и вилку бюджета." },
-                { t: "Отклики", d: "Мастера предлагают цену и ETA — можно обновлять отклик." },
-                { t: "Выбор", d: "Смотрите шкалу «бюджет ↔ цена» и выбираете исполнителя." },
-                { t: "Чат", d: "После принятия отклика — чат и завершение заказа." }
+                { t: "Заявка", d: "Расскажите, что нужно сделать, укажите адрес, когда удобно и диапазон цены (от и до)." },
+                { t: "Ответы мастеров", d: "Мастера пишут цену и примерно, когда смогут приехать. Ответ можно обновить." },
+                { t: "Выбор", d: "На экране видно, как цена мастера относится к вашему диапазону — так проще сравнить." },
+                { t: "Общение", d: "Когда выбрали мастера — можно переписываться в чате по заказу." }
               ].map((s) => (
                 <li key={s.t} className="rounded-xl border border-white/10 bg-slate-950/30 p-4">
                   <p className="text-sm font-semibold">{s.t}</p>
@@ -70,11 +71,36 @@ export default function Home() {
         </div>
       </div>
 
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium text-slate-700">Видеопрезентация</p>
+            <h2 className="mt-1 text-2xl font-semibold">Посмотрите, как всё устроено</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+              Коротко показываем: как оформить заявку, получить ответы мастеров и выбрать исполнителя.
+            </p>
+          </div>
+        </div>
+        <VideoPresentation />
+      </section>
+
       <section className="grid gap-3 md:grid-cols-3">
         {[
-          { step: "1", title: "Вилка бюджета", desc: "Как ставка в inDrive: обозначьте диапазон, чтобы мастерам было проще откликаться." },
-          { step: "2", title: "Прозрачные отклики", desc: "Каждый отклик — цена, ETA и комментарий. Можно сравнивать на шкале бюджета." },
-          { step: "3", title: "Назначение + чат", desc: "Выберите мастера и продолжайте общение в чате по заявке." }
+          {
+            step: "1",
+            title: "Диапазон цены",
+            desc: "Напишите, сколько готовы заплатить — от меньшей суммы до большей. Так мастерам проще предложить свою цену."
+          },
+          {
+            step: "2",
+            title: "Понятные ответы",
+            desc: "В каждом отклике — цена, примерное время приезда и комментарий. Всё можно сравнить на одном экране."
+          },
+          {
+            step: "3",
+            title: "Выбор и чат",
+            desc: "Выбираете мастера и продолжаете общение в чате по конкретному заказу."
+          }
         ].map((item) => (
           <div
             key={item.step}
@@ -92,7 +118,7 @@ export default function Home() {
       <section className="space-y-4">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-sm font-medium text-slate-700">Афиша работ</p>
+            <p className="text-sm font-medium text-slate-700">Часто заказывают</p>
             <h2 className="mt-1 text-2xl font-semibold">Популярные категории</h2>
           </div>
           <p className="max-w-xl text-sm text-slate-600">Соберите короткую заявку и получите отклики мастеров в вашем городе.</p>
@@ -134,15 +160,15 @@ export default function Home() {
         <div className="grid gap-6 md:grid-cols-[0.9fr_1.1fr] md:items-center">
           <div>
             <p className="text-sm font-medium text-slate-700">Три принципа</p>
-            <h2 className="mt-2 text-2xl font-semibold">Как в зале: свет, темп, выбор</h2>
+            <h2 className="mt-2 text-2xl font-semibold">Простые правила</h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Сервис построен на простых правилах: вы задаёте вилку, мастера отвечают конкретикой, а решение — всегда за вами.
+              Вы заранее обозначаете диапазон цены, мастера отвечают цифрами и сроками, а выбирать исполнителя — всегда вы.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-2xl border border-slate-200/70 bg-white/70 p-5">
               <p className="text-sm font-semibold">Прозрачно</p>
-              <p className="mt-2 text-sm leading-6 text-slate-600">Цена и ETA видны сразу — без “уточните в чате”.</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">Цена и примерное время приезда видны сразу — без долгих уточнений.</p>
             </div>
             <div className="rounded-2xl border border-slate-200/70 bg-white/70 p-5">
               <p className="text-sm font-semibold">Быстро</p>

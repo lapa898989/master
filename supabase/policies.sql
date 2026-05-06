@@ -6,6 +6,7 @@ alter table reviews enable row level security;
 alter table categories enable row level security;
 alter table request_photos enable row level security;
 alter table request_messages enable row level security;
+alter table notifications enable row level security;
 
 drop policy if exists "categories_read_all" on categories;
 drop policy if exists "profiles_read_self_or_admin" on profiles;
@@ -212,3 +213,14 @@ with check (
     exists (select 1 from profiles p where p.id = auth.uid() and p.role = 'admin')
   )
 );
+
+create policy "notifications_select_own"
+on notifications for select
+to authenticated
+using (user_id = auth.uid());
+
+create policy "notifications_update_own"
+on notifications for update
+to authenticated
+using (user_id = auth.uid())
+with check (user_id = auth.uid());
