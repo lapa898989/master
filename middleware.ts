@@ -11,6 +11,15 @@ export async function middleware(request: NextRequest) {
   // Must pass full `request` — passing only headers breaks App Router matching (404 on Vercel).
   let response = NextResponse.next({ request });
 
+  const pathname = request.nextUrl.pathname;
+  const needsAuthRefresh =
+    pathname.startsWith("/client") ||
+    pathname.startsWith("/master") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/chat") ||
+    pathname.startsWith("/notifications") ||
+    pathname.startsWith("/auth");
+
   if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) {
     const origin = request.headers.get("origin");
     if (origin) {
@@ -36,6 +45,11 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // На публичных страницах не делаем тяжёлых auth-запросов — ускоряет загрузку.
+  if (!needsAuthRefresh) {
+    return response;
+  }
+
   const supabase = createServerClient(supabaseUrl, supabaseKey, {
     cookies: {
       getAll() {
@@ -51,6 +65,7 @@ export async function middleware(request: NextRequest) {
   });
 
   try {
+    // getUser() делает сетевой запрос, но именно он «освежает» сессию и пишет новые cookies.
     await supabase.auth.getUser();
   } catch (e) {
     console.error("middleware: supabase.auth.getUser failed", e);
