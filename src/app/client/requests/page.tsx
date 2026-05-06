@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ClientRequestsRealtime } from "@/components/client-requests-realtime";
 import { requireRole } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
+import { countUnreadByRequestId } from "@/lib/notifications/unread-by-request";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,15 @@ export default async function ClientRequestsPage(props: { searchParams?: Promise
     .select("id, title, status, budget_min, budget_max, created_at")
     .eq("client_id", profile.id)
     .order("created_at", { ascending: false });
+
+  const { data: unreadRows } = await supabase
+    .from("notifications")
+    .select("href")
+    .eq("user_id", profile.id)
+    .is("read_at", null)
+    .like("href", "/client/requests/%")
+    .limit(500);
+  const unreadByRequest = countUnreadByRequestId((unreadRows ?? []) as Array<{ href: string }>);
 
   return (
     <section className="space-y-4">
@@ -28,14 +38,26 @@ export default async function ClientRequestsPage(props: { searchParams?: Promise
         </Link>
       </div>
       <div className="space-y-2">
-        {requests?.map((item) => (
-          <Link key={item.id} href={`/client/requests/${item.id}`} className="block p-4 stage-card-light hover:-translate-y-0.5 transition">
-            <p className="font-medium">{item.title}</p>
-            <p className="text-sm text-slate-600">
-              {item.status} | {item.budget_min}-{item.budget_max} RUB
-            </p>
-          </Link>
-        ))}
+        {requests?.map((item) => {
+          const n = unreadByRequest.get(item.id) ?? 0;
+          return (
+            <Link
+              key={item.id}
+              href={`/client/requests/${item.id}`}
+              className="relative block p-4 stage-card-light transition hover:-translate-y-0.5"
+            >
+              {n > 0 ? (
+                <span className="absolute right-3 top-3 flex h-6 min-w-6 items-center justify-center rounded-full bg-red-600 px-2 text-xs font-bold text-white shadow">
+                  {n > 99 ? "99+" : n}
+                </span>
+              ) : null}
+              <p className="font-medium">{item.title}</p>
+              <p className="text-sm text-slate-600">
+                {item.status} | {item.budget_min}-{item.budget_max} RUB
+              </p>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

@@ -19,6 +19,13 @@ export function ClientRequestsRealtime({ clientId }: { clientId: string }) {
           router.refresh();
         }
       )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${clientId}` },
+        () => {
+          router.refresh();
+        }
+      )
       .subscribe();
 
     return () => {
