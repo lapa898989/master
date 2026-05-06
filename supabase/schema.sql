@@ -216,6 +216,29 @@ $$;
 
 grant execute on function public.accept_offer(bigint, bigint) to authenticated;
 
+-- Helper for non-recursive RLS checks (см. миграцию 20250508160500_fix_rls_policy_recursion.sql)
+create or replace function public.master_has_offer_on_request(p_request_id bigint, p_master_id uuid)
+returns boolean
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_exists boolean;
+begin
+  perform set_config('row_security', 'off', true);
+
+  select exists(
+    select 1
+    from public.offers o
+    where o.request_id = p_request_id
+      and o.master_id = p_master_id
+  ) into v_exists;
+
+  return coalesce(v_exists, false);
+end;
+$$;
+
 -- Notifications (см. миграцию 20250507120000_notifications.sql)
 create table if not exists notifications (
   id bigserial primary key,

@@ -92,12 +92,8 @@ create policy "master_can_read_requests_where_has_offer"
 on requests for select
 to authenticated
 using (
-  exists (
-    select 1
-    from offers o
-    where o.request_id = requests.id
-      and o.master_id = auth.uid()
-  )
+  (auth.jwt() -> 'user_metadata' ->> 'role') = 'master'
+  and public.master_has_offer_on_request(requests.id, auth.uid())
 );
 
 create policy "offers_read_participant"
