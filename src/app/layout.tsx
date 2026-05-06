@@ -48,7 +48,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="ru">
       <body>
-        <header className="border-b border-white/10 bg-slate-950/80 backdrop-blur-2xl">
+        <header className="border-b border-white/15 bg-slate-900/45 backdrop-blur-2xl shadow-[0_1px_0_rgba(255,255,255,0.06)_inset]">
           <div className="stage-bg">
             <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
               <Link href="/" className="font-semibold tracking-wide text-amber-200">
@@ -107,7 +107,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           </div>
         </header>
         <main className="mx-auto max-w-6xl px-4 py-6 page-enter">{children}</main>
-        <footer className="mt-10 border-t border-white/10 bg-slate-950/80 py-10 text-white/80 backdrop-blur-2xl">
+        <footer className="mt-10 border-t border-white/15 bg-slate-900/45 py-10 text-white/80 backdrop-blur-2xl shadow-[0_-1px_0_rgba(255,255,255,0.06)_inset]">
           <div className="mx-auto max-w-6xl px-4">
             <div className="flex flex-wrap items-start justify-between gap-6">
               <div className="max-w-xl">

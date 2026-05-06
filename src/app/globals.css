@@ -6,22 +6,70 @@
   color-scheme: light;
 }
 
+/* Grey frosted glass page background + soft moving highlights */
+@keyframes glass-page-shimmer {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+  50% {
+    opacity: 0.78;
+    transform: translate3d(3%, 2%, 0) scale(1.02);
+  }
+}
+
 body {
   @apply text-slate-900;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  background-color: #c9ced8;
+  background-image:
+    radial-gradient(ellipse 130% 90% at 50% 110%, rgba(100, 116, 139, 0.28), transparent 58%),
+    radial-gradient(900px 520px at 12% 8%, rgba(255, 255, 255, 0.55), transparent 52%),
+    radial-gradient(800px 480px at 92% 18%, rgba(255, 255, 255, 0.28), transparent 50%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.22) 0%, transparent 42%),
+    linear-gradient(180deg, #d6dae3 0%, #e4e7ee 38%, #c5cbd8 100%);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
-    radial-gradient(900px 500px at 15% 10%, rgba(16, 185, 129, 0.20), transparent 60%),
-    radial-gradient(900px 500px at 85% 15%, rgba(52, 211, 153, 0.16), transparent 60%),
-    radial-gradient(1200px 700px at 50% 90%, rgba(15, 118, 110, 0.10), transparent 65%),
-    linear-gradient(180deg, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 100%);
+    linear-gradient(
+      118deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.38) 22%,
+      rgba(255, 255, 255, 0.06) 38%,
+      transparent 52%,
+      rgba(255, 255, 255, 0.18) 68%,
+      transparent 100%
+    ),
+    radial-gradient(ellipse 90% 55% at 75% -5%, rgba(255, 255, 255, 0.45), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 5% 95%, rgba(255, 255, 255, 0.2), transparent 55%);
+  mix-blend-mode: soft-light;
+  animation: glass-page-shimmer 18s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+    opacity: 0.62;
+  }
 }
 
 /* Theatre-like (stage) UI helpers */
 .stage-bg {
   background:
-    radial-gradient(1200px 600px at 20% 0%, rgba(251, 191, 36, 0.10), transparent 55%),
-    radial-gradient(900px 540px at 85% 5%, rgba(232, 121, 249, 0.08), transparent 60%),
-    radial-gradient(1200px 700px at 50% 100%, rgba(52, 211, 153, 0.07), transparent 65%),
-    linear-gradient(180deg, rgb(2 6 23) 0%, rgb(15 23 42) 100%);
+    linear-gradient(108deg, rgba(255, 255, 255, 0.16) 0%, transparent 42%),
+    radial-gradient(700px 360px at 100% 0%, rgba(255, 255, 255, 0.12), transparent 55%),
+    radial-gradient(600px 320px at 0% 100%, rgba(148, 163, 184, 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.96) 100%);
 }
 
 .stage-card {
