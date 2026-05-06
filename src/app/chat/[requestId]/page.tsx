@@ -4,6 +4,8 @@ import { ChatLive } from "@/components/chat-live";
 import { getCurrentProfile } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function ChatPage({ params }: { params: Promise<{ requestId: string }> }) {
   const p = await params;
   const requestId = Number(p.requestId);

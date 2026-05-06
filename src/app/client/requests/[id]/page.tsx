@@ -1,10 +1,12 @@
 import { acceptOfferAction, raiseRequestBudgetAction } from "@/app/client/actions";
-import { RequestOffersLive } from "@/components/request-offers-live";
+import { ClientRequestDetailRealtime } from "@/components/client-request-detail-realtime";
 import { BudgetOfferBar } from "@/components/budget-offer-bar";
 import { requireRole } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { RequestPhotoThumbnail } from "@/components/request-photo-thumbnail";
+
+export const dynamic = "force-dynamic";
 
 export default async function ClientRequestDetailsPage({
   params,
@@ -54,7 +56,7 @@ export default async function ClientRequestDetailsPage({
 
   return (
     <section className="space-y-4">
-      <RequestOffersLive requestId={requestId} />
+      <ClientRequestDetailRealtime requestId={requestId} />
       {s.accepted ? <p className="rounded-xl px-3 py-2 text-sm text-emerald-700 stage-card-light">Исполнитель успешно выбран.</p> : null}
       {s.error ? <p className="rounded-xl px-3 py-2 text-sm text-red-700 stage-card-light">Не удалось выбрать отклик. Попробуйте еще раз.</p> : null}
       {s.budget_ok ? (
@@ -68,6 +70,17 @@ export default async function ClientRequestDetailsPage({
       ) : null}
       {s.budget_error === "1" ? (
         <p className="rounded-xl px-3 py-2 text-sm text-red-700 stage-card-light">Не удалось обновить бюджет. Проверьте значение и статус заявки.</p>
+      ) : null}
+      {assignment ? (
+        <div className="rounded-2xl border border-amber-400/50 bg-amber-50/90 p-5 shadow-md backdrop-blur-xl">
+          <p className="text-sm font-semibold text-slate-900">Мастер выбран — откройте чат</p>
+          <p className="mt-1 text-sm text-slate-700">
+            Переписка по этой заявке доступна сразу. Сообщения обновляются без перезагрузки страницы.
+          </p>
+          <Link href={`/chat/${requestId}`} className="mt-4 inline-block stage-button-primary px-6 py-3">
+            Перейти в чат
+          </Link>
+        </div>
       ) : null}
       <h1 className="text-2xl font-semibold">{request.title}</h1>
       <p className="text-sm text-slate-600">
@@ -119,11 +132,6 @@ export default async function ClientRequestDetailsPage({
         </div>
       ) : null}
       <p className="text-sm text-slate-600">Статус: {request.status}</p>
-      {assignment ? (
-        <Link href={`/chat/${requestId}`} className="inline-block stage-button-primary">
-          Открыть чат с мастером
-        </Link>
-      ) : null}
       <h2 className="text-xl font-semibold">Отклики мастеров</h2>
       <div className="space-y-2">
         {offers?.map((offer) => {
@@ -137,7 +145,7 @@ export default async function ClientRequestDetailsPage({
               <p className="font-medium">Мастер: {masterName}</p>
             <BudgetOfferBar budgetMin={request.budget_min} budgetMax={request.budget_max} offerPrice={offer.price} />
             <p>
-              Цена: <b>{offer.price} RUB</b> | ETA: {offer.eta_minutes} мин
+              Цена: <b>{offer.price} RUB</b> | примерно через {offer.eta_minutes} мин
             </p>
             <p className="text-sm text-slate-600">{offer.comment}</p>
             {offer.status === "pending" && request.status === "open" ? (

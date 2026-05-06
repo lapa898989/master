@@ -1,7 +1,10 @@
 import { MasterOfferForm } from "@/components/master-offer-form";
+import { MasterOpenRequestsRealtime } from "@/components/master-open-requests-realtime";
 import { requireRole } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
 
 export default async function MasterRequestsPage(props: {
   searchParams: Promise<{ category?: string; city?: string; error?: string; sent?: string }>;
@@ -33,6 +36,7 @@ export default async function MasterRequestsPage(props: {
 
   return (
     <section className="space-y-4">
+      <MasterOpenRequestsRealtime />
       <h1 className="text-2xl font-semibold">Доступные заявки</h1>
       <p className="text-sm text-slate-600">
         Логика как в InDrive: у клиента вилка бюджета — вы предлагаете свою цену и время; клиент сравнивает предложения на шкале.

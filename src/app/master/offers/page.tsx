@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { MasterOffersRealtime } from "@/components/master-offers-realtime";
 import { requireRole } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
+
+export const dynamic = "force-dynamic";
 
 export default async function MasterOffersPage() {
   const profile = await requireRole(["master"]);
@@ -20,6 +23,7 @@ export default async function MasterOffersPage() {
 
   return (
     <section className="space-y-4">
+      <MasterOffersRealtime masterId={profile.id} />
       <h1 className="text-2xl font-semibold">Мои отклики</h1>
       <div className="space-y-2">
         {offers?.map((offer) => {

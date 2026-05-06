@@ -1,7 +1,10 @@
 import Link from "next/link";
 
+import { ClientRequestsRealtime } from "@/components/client-requests-realtime";
 import { requireRole } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
+
+export const dynamic = "force-dynamic";
 
 export default async function ClientDashboard() {
   const profile = await requireRole(["client"]);
@@ -16,6 +19,7 @@ export default async function ClientDashboard() {
 
   return (
     <section className="space-y-6">
+      <ClientRequestsRealtime clientId={profile.id} />
       <div className="p-6 stage-card-light">
         <h1 className="text-2xl font-semibold">Кабинет клиента</h1>
         <p className="mt-2 text-sm text-slate-600">Создавайте заявки, принимайте отклики и общайтесь с мастером в чате после выбора исполнителя.</p>

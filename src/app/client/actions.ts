@@ -66,7 +66,9 @@ export async function acceptOfferAction(formData: FormData) {
   const supabase = await createClient();
   const offerId = Number(formData.get("offer_id"));
   const requestId = Number(formData.get("request_id"));
-  if (!offerId || !requestId) return;
+  if (!offerId || !requestId || Number.isNaN(offerId) || Number.isNaN(requestId)) {
+    redirect("/client/requests?error=" + encodeURIComponent("Не удалось обработать выбор: обновите страницу и попробуйте снова."));
+  }
 
   const { error } = await supabase.rpc("accept_offer", {
     p_offer_id: offerId,
@@ -74,10 +76,13 @@ export async function acceptOfferAction(formData: FormData) {
   });
 
   if (error) {
+    console.error("accept_offer rpc", error);
     redirect(`/client/requests/${requestId}?error=offer`);
   }
 
   revalidatePath(`/client/requests/${requestId}`);
+  revalidatePath("/client/requests");
+  revalidatePath("/master/offers");
   redirect(`/client/requests/${requestId}?accepted=1`);
 }
 

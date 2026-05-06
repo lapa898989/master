@@ -1,7 +1,10 @@
 import Link from "next/link";
 
+import { MasterDashboardRealtime } from "@/components/master-dashboard-realtime";
 import { requireRole } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
+
+export const dynamic = "force-dynamic";
 
 export default async function MasterDashboard() {
   const profile = await requireRole(["master"]);
@@ -12,6 +15,7 @@ export default async function MasterDashboard() {
 
   return (
     <section className="space-y-6">
+      <MasterDashboardRealtime masterId={profile.id} />
       <div className="p-6 stage-card-light">
         <h1 className="text-2xl font-semibold">Кабинет мастера</h1>
         <p className="mt-2 text-sm text-slate-600">
