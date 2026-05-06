@@ -83,7 +83,7 @@ export async function acceptOfferAction(formData: FormData) {
   revalidatePath(`/client/requests/${requestId}`);
   revalidatePath("/client/requests");
   revalidatePath("/master/offers");
-  redirect(`/client/requests/${requestId}?accepted=1`);
+  redirect(`/chat/${requestId}`);
 }
 
 export async function raiseRequestBudgetAction(formData: FormData) {

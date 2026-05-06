@@ -99,7 +99,7 @@ begin
       'offer_accepted',
       'Вас выбрали',
       'Клиент принял ваш отклик по заявке',
-      '/master/requests/' || new.request_id::text
+      '/chat/' || new.request_id::text
     );
   end if;
   return new;

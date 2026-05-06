@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { AutoOpenChatOnAccepted } from "@/components/auto-open-chat-on-accepted";
 import { NotificationsNavLink } from "@/components/notifications-nav-link";
 import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/site-url";
@@ -49,6 +50,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="ru">
       <body>
+        {user && profile?.role === "master" ? <AutoOpenChatOnAccepted userId={user.id} /> : null}
         <header className="border-b border-white/15 bg-slate-900/45 backdrop-blur-2xl shadow-[0_1px_0_rgba(255,255,255,0.06)_inset]">
           <div className="stage-bg">
             <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
