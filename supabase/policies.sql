@@ -15,6 +15,7 @@ drop policy if exists "profiles_update_self_or_admin" on profiles;
 drop policy if exists "client_can_manage_own_requests" on requests;
 drop policy if exists "master_can_read_open_requests" on requests;
 drop policy if exists "master_can_read_assigned_requests" on requests;
+drop policy if exists "master_can_read_requests_where_has_offer" on requests;
 drop policy if exists "offers_read_participant" on offers;
 drop policy if exists "master_insert_own_offers" on offers;
 drop policy if exists "master_update_own_offers" on offers;
@@ -83,6 +84,18 @@ using (
     from assignments a
     join offers o on o.id = a.offer_id
     where a.request_id = requests.id
+      and o.master_id = auth.uid()
+  )
+);
+
+create policy "master_can_read_requests_where_has_offer"
+on requests for select
+to authenticated
+using (
+  exists (
+    select 1
+    from offers o
+    where o.request_id = requests.id
       and o.master_id = auth.uid()
   )
 );

@@ -16,12 +16,16 @@ export default async function ChatPage({ params }: { params: Promise<{ requestId
   }
 
   const supabase = await createClient();
-  const { data: request } = await supabase.from("requests").select("id, client_id").eq("id", requestId).maybeSingle();
+  const {
+    data: request,
+    error: requestError
+  } = await supabase.from("requests").select("id, client_id").eq("id", requestId).maybeSingle();
   if (!request) {
     return (
       <section className="mx-auto max-w-2xl space-y-3 stage-card-light p-6">
         <h1 className="text-xl font-semibold">Чат не найден</h1>
         <p className="text-sm text-slate-600">Заявка #{requestId} не найдена или у вас нет доступа.</p>
+        {requestError ? <p className="text-xs text-slate-500">Supabase: {requestError.message}</p> : null}
       </section>
     );
   }
