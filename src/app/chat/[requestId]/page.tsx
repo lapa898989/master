@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { sendMessageAction } from "@/app/chat/actions";
 import { ChatLive } from "@/components/chat-live";
 import { getCurrentProfile } from "@/lib/auth/roles";
@@ -10,11 +10,21 @@ export default async function ChatPage({ params }: { params: Promise<{ requestId
   const p = await params;
   const requestId = Number(p.requestId);
   const profile = await getCurrentProfile();
-  if (!profile || !requestId) return notFound();
+  if (!requestId) return notFound();
+  if (!profile) {
+    redirect("/auth/login");
+  }
 
   const supabase = await createClient();
   const { data: request } = await supabase.from("requests").select("id, client_id").eq("id", requestId).maybeSingle();
-  if (!request) return notFound();
+  if (!request) {
+    return (
+      <section className="mx-auto max-w-2xl space-y-3 stage-card-light p-6">
+        <h1 className="text-xl font-semibold">Чат не найден</h1>
+        <p className="text-sm text-slate-600">Заявка #{requestId} не найдена или у вас нет доступа.</p>
+      </section>
+    );
+  }
 
   const { data: assignment } = await supabase
     .from("assignments")
@@ -28,7 +38,14 @@ export default async function ChatPage({ params }: { params: Promise<{ requestId
 
   const { data: acceptedOffer } = await supabase.from("offers").select("master_id").eq("id", assignment.offer_id).maybeSingle();
   const canAccess = profile.role === "admin" || request.client_id === profile.id || acceptedOffer?.master_id === profile.id;
-  if (!canAccess) return notFound();
+  if (!canAccess) {
+    return (
+      <section className="mx-auto max-w-2xl space-y-3 stage-card-light p-6">
+        <h1 className="text-xl font-semibold">Нет доступа к чату</h1>
+        <p className="text-sm text-slate-600">Чат доступен только клиенту, выбранному мастеру или администратору.</p>
+      </section>
+    );
+  }
 
   const { data: messages } = await supabase
     .from("request_messages")
