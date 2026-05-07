@@ -53,10 +53,7 @@ function LoginForm() {
         return;
       }
 
-      const role = data?.role ?? "client";
-      if (role === "master") router.replace("/master/requests");
-      else if (role === "admin") router.replace("/admin");
-      else router.replace("/client/requests");
+      router.replace("/");
     } finally {
       setLoading(false);
     }

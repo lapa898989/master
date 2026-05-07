@@ -65,8 +65,5 @@ export async function loginAction(formData: FormData) {
     redirect("/auth/login?error=Ваш аккаунт заблокирован");
   }
 
-  const role = data?.role ?? "client";
-  if (role === "master") redirect("/master/requests");
-  if (role === "admin") redirect("/admin");
-  redirect("/client/requests");
+  redirect("/");
 }
