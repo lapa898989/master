@@ -40,7 +40,9 @@ export default async function ClientDashboard() {
       <ClientRequestsRealtime clientId={profile.id} />
       <div className="p-6 stage-card-light">
         <h1 className="text-2xl font-semibold">Кабинет клиента</h1>
-        <p className="mt-2 text-sm text-slate-600">Создавайте заявки, принимайте отклики и общайтесь с мастером в чате после выбора исполнителя.</p>
+        <p className="mt-2 text-sm text-slate-600">
+          Быстро разместите заявку, сравните предложения мастеров и выберите удобный вариант. После выбора сразу открывается чат по заказу.
+        </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link href="/client/requests/new" className="stage-button-primary">
             Создать заявку
@@ -48,8 +50,33 @@ export default async function ClientDashboard() {
           <Link href="/client/requests" className="stage-button-light">
             Мои заявки
           </Link>
+          <Link href="/notifications" className="stage-button-ghost">
+            Уведомления
+          </Link>
         </div>
       </div>
+
+      <section className="grid gap-3 md:grid-cols-3">
+        {[
+          {
+            title: "Что можно сделать",
+            desc: "Создать заявку, поднять максимальную цену, выбрать мастера и открыть чат — всё в одном месте."
+          },
+          {
+            title: "Как заказать (2 минуты)",
+            desc: "Опишите задачу → укажите адрес и когда удобно → задайте диапазон цены → дождитесь откликов и выберите."
+          },
+          {
+            title: "Почему удобно",
+            desc: "Вы видите цену и примерное время приезда сразу, без звонков и долгих уточнений."
+          }
+        ].map((x) => (
+          <div key={x.title} className="rounded-2xl p-5 stage-card-light">
+            <p className="text-sm font-semibold text-slate-900">{x.title}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{x.desc}</p>
+          </div>
+        ))}
+      </section>
 
       <div className="grid gap-3 md:grid-cols-2">
         <div className="rounded-2xl p-5 stage-card-light">

@@ -19,7 +19,7 @@ export default async function MasterDashboard() {
       <div className="p-6 stage-card-light">
         <h1 className="text-2xl font-semibold">Кабинет мастера</h1>
         <p className="mt-2 text-sm text-slate-600">
-          Заявки с вилкой бюджета: предлагайте свою цену (можно обновить отклик), клиент сравнивает предложения на шкале. После принятия — чат по заказу.
+          Выбирайте заявки, отправляйте отклики с ценой и временем приезда. Когда клиент выберет вас — чат откроется автоматически.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link href="/master/requests" className="stage-button-primary">
@@ -28,8 +28,33 @@ export default async function MasterDashboard() {
           <Link href="/master/offers" className="stage-button-light">
             Мои отклики
           </Link>
+          <Link href="/notifications" className="stage-button-ghost">
+            Уведомления
+          </Link>
         </div>
       </div>
+
+      <section className="grid gap-3 md:grid-cols-3">
+        {[
+          {
+            title: "Что важно в отклике",
+            desc: "Пиши понятную цену, время приезда и короткий комментарий. Это повышает шанс, что выберут именно тебя."
+          },
+          {
+            title: "Как получать больше заказов",
+            desc: "Откликайся быстро и обновляй предложение, если клиент поднял максимум цены."
+          },
+          {
+            title: "Преимущества",
+            desc: "Новые заявки и изменения приходят без перезагрузки страницы. Выбор клиента сразу переводит в чат."
+          }
+        ].map((x) => (
+          <div key={x.title} className="rounded-2xl p-5 stage-card-light">
+            <p className="text-sm font-semibold text-slate-900">{x.title}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{x.desc}</p>
+          </div>
+        ))}
+      </section>
 
       <div className="grid gap-3 md:grid-cols-2">
         <div className="rounded-2xl p-5 stage-card-light">
