@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense, useMemo, useState } from "react";
 
 import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,32 +30,16 @@ function LoginForm() {
         return;
       }
 
-      const uid = signInData.user?.id;
-      if (!uid) {
-        setError("Не удалось получить пользователя после входа");
-        return;
-      }
+      const roleMeta = (signInData.user?.user_metadata?.role as unknown) === "admin"
+        ? "admin"
+        : (signInData.user?.user_metadata?.role as unknown) === "master"
+          ? "master"
+          : "client";
 
-      const { data, error: profileError } = await supabase
-        .from("profiles")
-        .select("role,is_banned")
-        .eq("id", uid)
-        .single();
-      if (profileError) {
-        setError(profileError.message);
-        return;
-      }
+      const dest = roleMeta === "admin" ? "/admin" : roleMeta === "master" ? "/master" : "/client";
 
-      if (data?.is_banned) {
-        await supabase.auth.signOut();
-        setError("Ваш аккаунт заблокирован");
-        return;
-      }
-
-      const role = data?.role ?? "client";
-      if (role === "admin") router.replace("/admin");
-      else if (role === "master") router.replace("/master");
-      else router.replace("/client");
+      // Полный переход, чтобы SSR точно увидел cookies сессии.
+      window.location.assign(dest);
     } finally {
       setLoading(false);
     }
