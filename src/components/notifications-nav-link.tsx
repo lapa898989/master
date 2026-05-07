@@ -33,8 +33,31 @@ export function NotificationsNavLink({ userId }: { userId: string }) {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
-        () => {
-          void loadCount();
+        (payload) => {
+          const eventType = (payload as { eventType?: unknown }).eventType;
+          const nextRow = (payload as { new?: unknown }).new as { read_at?: unknown } | null | undefined;
+          const prevRow = (payload as { old?: unknown }).old as { read_at?: unknown } | null | undefined;
+
+          // Если мы ещё не знаем текущее значение — один раз посчитаем и дальше работаем инкрементально.
+          if (unread === null) {
+            void loadCount();
+            return;
+          }
+
+          const nextUnread = nextRow?.read_at == null;
+          const prevUnread = prevRow?.read_at == null;
+
+          setUnread((current) => {
+            const n = current ?? 0;
+            if (eventType === "INSERT") return nextUnread ? n + 1 : n;
+            if (eventType === "DELETE") return prevUnread ? Math.max(0, n - 1) : n;
+            if (eventType === "UPDATE") {
+              if (prevUnread && !nextUnread) return Math.max(0, n - 1);
+              if (!prevUnread && nextUnread) return n + 1;
+              return n;
+            }
+            return n;
+          });
         }
       )
       .subscribe();
@@ -42,7 +65,7 @@ export function NotificationsNavLink({ userId }: { userId: string }) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [userId, loadCount]);
+  }, [userId, loadCount, unread]);
 
   const n = unread ?? 0;
   const label = n > 99 ? "99+" : n > 0 ? String(n) : null;

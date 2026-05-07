@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { sendMessageAction } from "@/app/chat/actions";
-import { ChatLive } from "@/components/chat-live";
+import { ChatThread } from "@/components/chat-thread";
 import { getCurrentProfile } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
 
@@ -59,20 +59,26 @@ export default async function ChatPage({ params }: { params: Promise<{ requestId
 
   return (
     <section className="mx-auto max-w-2xl space-y-4">
-      <ChatLive requestId={requestId} />
       <h1 className="text-2xl font-semibold">Чат по заявке #{requestId}</h1>
-      <div className="space-y-2 p-4 glass-card">
-        {messages?.length ? (
-          messages.map((msg) => (
-            <article key={msg.id} className={`rounded-xl p-3 ${msg.sender_id === profile.id ? "bg-emerald-600/10" : "bg-white/40"} backdrop-blur`}>
-              <p className="text-xs text-slate-500">{(msg.profiles as { full_name?: string } | null)?.full_name ?? "Пользователь"}</p>
-              <p>{msg.message}</p>
-            </article>
-          ))
-        ) : (
-          <p className="text-sm text-slate-500">Сообщений пока нет.</p>
-        )}
-      </div>
+      <ChatThread
+        requestId={requestId}
+        currentUserId={profile.id}
+        initialMessages={
+          (messages ?? []).map((m) => ({
+            id: m.id,
+            message: m.message,
+            created_at: m.created_at,
+            sender_id: m.sender_id,
+            sender_name: (m.profiles as { full_name?: string } | null)?.full_name ?? null
+          })) as Array<{
+            id: number;
+            message: string;
+            created_at: string;
+            sender_id: string;
+            sender_name?: string | null;
+          }>
+        }
+      />
       <form action={sendMessageAction} className="flex gap-2">
         <input type="hidden" name="request_id" value={requestId} />
         <input

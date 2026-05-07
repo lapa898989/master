@@ -45,14 +45,16 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   } = await supabase.auth.getSession();
   const user = session?.user ?? null;
 
-  const { data: profile } = user
-    ? await supabase.from("profiles").select("id, role, full_name").eq("id", user.id).single()
-    : { data: null };
+  const roleMeta = (user?.user_metadata?.role as unknown) === "admin" ? "admin" : (user?.user_metadata?.role as unknown) === "master" ? "master" : "client";
+  const fullNameMeta =
+    typeof user?.user_metadata?.full_name === "string" && user.user_metadata.full_name.trim()
+      ? String(user.user_metadata.full_name).trim()
+      : user?.email ?? "Пользователь";
 
   return (
     <html lang="ru">
       <body>
-        {user && profile?.role === "master" ? <AutoOpenChatOnAccepted userId={user.id} /> : null}
+        {user && roleMeta === "master" ? <AutoOpenChatOnAccepted userId={user.id} /> : null}
         <header className="border-b border-white/15 bg-slate-900/45 backdrop-blur-2xl shadow-[0_1px_0_rgba(255,255,255,0.06)_inset]">
           <div className="stage-bg">
             <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -60,7 +62,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 ServiceDrive
               </Link>
               <div className="flex items-center gap-4 text-sm">
-              {profile?.role === "client" ? (
+              {user && roleMeta === "client" ? (
                 <>
                   <Link className="text-white/90 hover:text-white" href="/client">
                     Кабинет
@@ -70,7 +72,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                   </Link>
                 </>
               ) : null}
-              {profile?.role === "master" ? (
+              {user && roleMeta === "master" ? (
                 <>
                   <Link className="text-white/90 hover:text-white" href="/master">
                     Кабинет
@@ -83,17 +85,17 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                   </Link>
                 </>
               ) : null}
-              {profile?.role === "admin" ? (
+              {user && roleMeta === "admin" ? (
                 <Link className="text-white/90 hover:text-white" href="/admin">
                   Админ
                 </Link>
               ) : null}
-              {user && profile && ["client", "master", "admin"].includes(profile.role) ? (
+              {user && ["client", "master", "admin"].includes(roleMeta) ? (
                 <NotificationsNavLink userId={user.id} />
               ) : null}
               {user ? (
                 <div className="flex items-center gap-3">
-                  <span className="hidden text-xs text-white/70 md:inline">{profile?.full_name ?? user.email}</span>
+                  <span className="hidden text-xs text-white/70 md:inline">{fullNameMeta}</span>
                   <form action={signOut}>
                     <button type="submit" className="stage-button">
                       Выйти

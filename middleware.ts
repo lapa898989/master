@@ -19,13 +19,12 @@ export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const pathname = request.nextUrl.pathname;
-  const needsAuthRefresh =
+  const isProtectedPath =
     pathname.startsWith("/client") ||
     pathname.startsWith("/master") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/chat") ||
-    pathname.startsWith("/notifications") ||
-    pathname.startsWith("/auth");
+    pathname.startsWith("/notifications");
 
   if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) {
     const origin = request.headers.get("origin");
@@ -61,7 +60,13 @@ export async function middleware(request: NextRequest) {
   }
 
   // На публичных страницах не делаем тяжёлых auth-запросов — ускоряет загрузку.
-  if (!needsAuthRefresh) {
+  if (!isProtectedPath) {
+    return response;
+  }
+
+  // Если нет cookies сессии — не делаем сетевой refresh в middleware.
+  // Доступ/редиректы всё равно обработаются на уровне страниц через getSession()/requireRole().
+  if (!hasSupabaseAuthCookies(request)) {
     return response;
   }
 
