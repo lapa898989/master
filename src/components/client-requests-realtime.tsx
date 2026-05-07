@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/client";
+import { useDebouncedRouterRefresh } from "@/hooks/use-debounced-router-refresh";
 
 export function ClientRequestsRealtime({ clientId }: { clientId: string }) {
-  const router = useRouter();
+  const scheduleRefresh = useDebouncedRouterRefresh(380);
 
   useEffect(() => {
     const supabase = createClient();
@@ -16,14 +16,14 @@ export function ClientRequestsRealtime({ clientId }: { clientId: string }) {
         "postgres_changes",
         { event: "*", schema: "public", table: "requests", filter: `client_id=eq.${clientId}` },
         () => {
-          router.refresh();
+          scheduleRefresh();
         }
       )
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${clientId}` },
         () => {
-          router.refresh();
+          scheduleRefresh();
         }
       )
       .subscribe();
@@ -31,7 +31,7 @@ export function ClientRequestsRealtime({ clientId }: { clientId: string }) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [clientId, router]);
+  }, [clientId, scheduleRefresh]);
 
   return null;
 }

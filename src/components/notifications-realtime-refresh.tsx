@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/client";
+import { useDebouncedRouterRefresh } from "@/hooks/use-debounced-router-refresh";
 
 /** Обновляет серверный рендер списка при новых/изменённых уведомлениях. */
 export function NotificationsRealtimeRefresh({ userId }: { userId: string }) {
-  const router = useRouter();
+  const scheduleRefresh = useDebouncedRouterRefresh(380);
 
   useEffect(() => {
     const supabase = createClient();
@@ -17,7 +17,7 @@ export function NotificationsRealtimeRefresh({ userId }: { userId: string }) {
         "postgres_changes",
         { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
         () => {
-          router.refresh();
+          scheduleRefresh();
         }
       )
       .subscribe();
@@ -25,7 +25,7 @@ export function NotificationsRealtimeRefresh({ userId }: { userId: string }) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [userId, router]);
+  }, [userId, scheduleRefresh]);
 
   return null;
 }

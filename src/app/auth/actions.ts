@@ -52,14 +52,12 @@ export async function loginAction(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data: signInData, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
     redirect(`/auth/login?error=${encodeURIComponent(error.message)}`);
   }
 
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
+  const user = signInData.user;
   const { data } = await supabase.from("profiles").select("role,is_banned").eq("id", user?.id ?? "").single();
 
   if (data?.is_banned) {

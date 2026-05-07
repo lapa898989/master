@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { RealtimeOffers } from "@/components/realtime-offers";
+import { useDebouncedRouterRefresh } from "@/hooks/use-debounced-router-refresh";
 
 export function RequestOffersLive({ requestId }: { requestId: number }) {
-  const router = useRouter();
-  return <RealtimeOffers requestId={requestId} onEvent={() => router.refresh()} />;
+  const scheduleRefresh = useDebouncedRouterRefresh(320);
+  return <RealtimeOffers requestId={requestId} onEvent={scheduleRefresh} />;
 }

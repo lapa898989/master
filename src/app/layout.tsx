@@ -39,9 +39,11 @@ async function signOut() {
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const supabase = await createClient();
+  // getSession() читает JWT из cookies без лишнего запроса к Auth; валидацию/refresh делает middleware на защищённых путях.
   const {
-    data: { user }
-  } = await supabase.auth.getUser();
+    data: { session }
+  } = await supabase.auth.getSession();
+  const user = session?.user ?? null;
 
   const { data: profile } = user
     ? await supabase.from("profiles").select("id, role, full_name").eq("id", user.id).single()

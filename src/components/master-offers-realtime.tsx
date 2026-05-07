@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/client";
+import { useDebouncedRouterRefresh } from "@/hooks/use-debounced-router-refresh";
 
 export function MasterOffersRealtime({ masterId }: { masterId: string }) {
-  const router = useRouter();
+  const scheduleRefresh = useDebouncedRouterRefresh(380);
 
   useEffect(() => {
     const supabase = createClient();
@@ -16,7 +16,7 @@ export function MasterOffersRealtime({ masterId }: { masterId: string }) {
         "postgres_changes",
         { event: "*", schema: "public", table: "offers", filter: `master_id=eq.${masterId}` },
         () => {
-          router.refresh();
+          scheduleRefresh();
         }
       )
       .subscribe();
@@ -24,7 +24,7 @@ export function MasterOffersRealtime({ masterId }: { masterId: string }) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [masterId, router]);
+  }, [masterId, scheduleRefresh]);
 
   return null;
 }

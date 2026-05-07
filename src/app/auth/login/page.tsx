@@ -25,15 +25,22 @@ function LoginForm() {
       const password = String(form.get("password") ?? "");
 
       const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
       if (signInError) {
         setError(signInError.message);
+        return;
+      }
+
+      const uid = signInData.user?.id;
+      if (!uid) {
+        setError("Не удалось получить пользователя после входа");
         return;
       }
 
       const { data, error: profileError } = await supabase
         .from("profiles")
         .select("role,is_banned")
+        .eq("id", uid)
         .single();
       if (profileError) {
         setError(profileError.message);

@@ -7,6 +7,13 @@ type CookieToSet = {
   options?: Parameters<NextResponse["cookies"]["set"]>[2];
 };
 
+/** Есть ли сохранённая сессия в cookies (без сетевого запроса к GoTrue). */
+function hasSupabaseAuthCookies(request: NextRequest): boolean {
+  return request.cookies.getAll().some(({ name }) => name.startsWith("sb-") && name.includes("auth-token"));
+}
+
+const PUBLIC_AUTH_GET_PATHS = ["/auth/login", "/auth/register", "/auth/forgot", "/auth/reset"] as const;
+
 export async function middleware(request: NextRequest) {
   // Must pass full `request` — passing only headers breaks App Router matching (404 on Vercel).
   let response = NextResponse.next({ request });
@@ -42,6 +49,14 @@ export async function middleware(request: NextRequest) {
     console.error(
       "middleware: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY/NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY is missing"
     );
+    return response;
+  }
+
+  // Страницы входа/регистрации без сессии: не дергаем getUser() — экономия RTT на каждый заход.
+  const isPublicAuthGet =
+    request.method === "GET" &&
+    PUBLIC_AUTH_GET_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  if (isPublicAuthGet && !hasSupabaseAuthCookies(request)) {
     return response;
   }
 
