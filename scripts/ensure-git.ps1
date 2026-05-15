@@ -18,5 +18,10 @@ if (-not (Test-Path $gitExe)) {
 }
 
 $env:PATH = "$(Join-Path $tools 'cmd');$(Join-Path $tools 'usr\bin');$env:PATH"
+
+# На части сетей Windows Schannel падает на проверке отзыва сертификата (CRYPT_E_NO_REVOCATION_CHECK) — git push ломается.
+# Локально для этого репозитория отключаем проверку отзыва только для Git HTTP (не трогаем глобальный git config).
+& $gitExe -C $root config http.schannelCheckRevocation false
+
 & $gitExe --version
 Write-Host "Git: $gitExe" -ForegroundColor Green
