@@ -1,4 +1,4 @@
-# Push в GitHub при ошибке Schannel CRYPT_E_NO_REVOCATION_CHECK на Windows.
+# Push to GitHub when Schannel fails with CRYPT_E_NO_REVOCATION_CHECK (corporate network / Windows).
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
@@ -8,6 +8,6 @@ Set-Location $root
 git config http.schannelCheckRevocation false
 git config http.schannelCheckRevoke false
 
-Write-Host "git push (обход проверки SSL для Schannel в этой сети)..." -ForegroundColor Cyan
+Write-Host "git push (sslVerify=false workaround for this network)..." -ForegroundColor Cyan
 git -c http.sslVerify=false push
-Write-Host "Готово." -ForegroundColor Green
+Write-Host "Done." -ForegroundColor Green
