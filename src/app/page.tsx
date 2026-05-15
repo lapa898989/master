@@ -1,8 +1,12 @@
 import Link from "next/link";
+import { getCurrentProfile } from "@/lib/auth/roles";
 import { getSiteUrl } from "@/lib/site-url";
 import { VideoPresentation } from "@/components/video-presentation";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const profile = await getCurrentProfile();
   const siteUrl = getSiteUrl();
   const jsonLd = {
     "@context": "https://schema.org",
@@ -32,15 +36,77 @@ export default function Home() {
               примерным временем приезда. Вы сравниваете предложения и выбираете удобный вариант.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/client/requests/new" className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400">
-                Создать заявку
-              </Link>
-              <Link href="/master/requests" className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur-xl transition hover:bg-white/10">
-                Я мастер — смотреть заявки
-              </Link>
-              <Link href="/auth/login" className="rounded-xl border border-white/15 bg-white/0 px-5 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5">
-                Войти
-              </Link>
+              {!profile ? (
+                <>
+                  <Link href="/client/requests/new" className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400">
+                    Создать заявку
+                  </Link>
+                  <Link
+                    href="/master/requests"
+                    className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur-xl transition hover:bg-white/10"
+                  >
+                    Я мастер — смотреть заявки
+                  </Link>
+                  <Link
+                    href="/auth/login"
+                    className="rounded-xl border border-white/15 bg-white/0 px-5 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5"
+                  >
+                    Войти
+                  </Link>
+                </>
+              ) : profile.role === "admin" ? (
+                <Link href="/admin" className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400">
+                  Админ-панель
+                </Link>
+              ) : profile.role === "master" ? (
+                <>
+                  <Link href="/master/requests" className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400">
+                    Смотреть заявки
+                  </Link>
+                  <Link
+                    href="/master"
+                    className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur-xl transition hover:bg-white/10"
+                  >
+                    Кабинет мастера
+                  </Link>
+                  <Link
+                    href="/master/offers"
+                    className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur-xl transition hover:bg-white/10"
+                  >
+                    Мои отклики
+                  </Link>
+                  <Link
+                    href="/account/role"
+                    className="rounded-xl border border-white/15 bg-white/0 px-5 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5"
+                  >
+                    Сменить роль
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/client/requests/new" className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400">
+                    Создать заявку
+                  </Link>
+                  <Link
+                    href="/client"
+                    className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur-xl transition hover:bg-white/10"
+                  >
+                    Мой кабинет
+                  </Link>
+                  <Link
+                    href="/client/requests"
+                    className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur-xl transition hover:bg-white/10"
+                  >
+                    Мои заявки
+                  </Link>
+                  <Link
+                    href="/account/role"
+                    className="rounded-xl border border-white/15 bg-white/0 px-5 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5"
+                  >
+                    Сменить роль
+                  </Link>
+                </>
+              )}
             </div>
             <div className="mt-7 flex flex-wrap gap-2 text-[11px] text-slate-300/80">
               {["Электрики", "Сантехники", "Сборка мебели", "Ремонт", "Клининг"].map((x) => (
@@ -49,6 +115,38 @@ export default function Home() {
                 </span>
               ))}
             </div>
+            {profile ? (
+              <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-left backdrop-blur-xl">
+                <p className="text-xs font-semibold text-amber-200/90">
+                  {profile.is_banned ? "Аккаунт заблокирован" : `Здравствуйте, ${profile.full_name}`}
+                </p>
+                {!profile.is_banned ? (
+                  <p className="mt-1 text-[10px] uppercase tracking-wide text-slate-400">
+                    {profile.role === "admin" ? "Роль: администратор" : profile.role === "master" ? "Роль: мастер" : "Роль: клиент"}
+                  </p>
+                ) : null}
+                {profile.is_banned ? (
+                  <p className="mt-2 text-xs leading-5 text-red-200/90">Доступ к заявкам и откликам ограничен. Если это ошибка — свяжитесь с поддержкой.</p>
+                ) : profile.role === "admin" ? (
+                  <p className="mt-2 text-xs leading-5 text-slate-200/80">
+                    В админ-панели можно просматривать пользователей и заявки, при необходимости вмешиваться в модерацию.
+                  </p>
+                ) : profile.role === "master" ? (
+                  <p className="mt-2 text-xs leading-5 text-slate-200/80">
+                    Откройте ленту заявок в вашем городе и отправьте отклик с ценой и временем приезда. Когда клиент вас выберет, откроется чат по заказу. Новые события
+                    приходят в уведомления — не обязательно обновлять страницу.
+                  </p>
+                ) : (
+                  <p className="mt-2 text-xs leading-5 text-slate-200/80">
+                    Создайте заявку с адресом, удобным временем и диапазоном цены — мастера ответят своими предложениями. Сравните цены на одном экране, выберите исполнителя и
+                    общайтесь в чате. Непрочитанные сообщения и отклики подсвечиваются в кабинете и в уведомлениях.
+                  </p>
+                )}
+                {!profile.is_banned && profile.city ? (
+                  <p className="mt-3 text-[11px] text-slate-400">Город в профиле: {profile.city}</p>
+                ) : null}
+              </div>
+            ) : null}
           </div>
 
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
