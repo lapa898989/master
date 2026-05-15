@@ -51,11 +51,35 @@ export default async function ChatPage({ params }: { params: Promise<{ requestId
     );
   }
 
-  const { data: messages } = await supabase
+  const {
+    data: messages,
+    error: messagesError
+  } = await supabase
     .from("request_messages")
-    .select("id, message, created_at, sender_id, profiles:sender_id(full_name)")
+    .select("id, message, created_at, sender_id")
     .eq("request_id", requestId)
     .order("created_at", { ascending: true });
+
+  if (messagesError) {
+    return (
+      <section className="mx-auto max-w-2xl space-y-3 stage-card-light p-6">
+        <h1 className="text-xl font-semibold">Не удалось загрузить чат</h1>
+        <p className="text-sm text-slate-600">Ошибка при загрузке сообщений.</p>
+        <p className="text-xs text-slate-500">{messagesError.message}</p>
+      </section>
+    );
+  }
+
+  const senderIds = Array.from(new Set((messages ?? []).map((m) => m.sender_id).filter(Boolean))) as string[];
+  const namesById = new Map<string, string>();
+  if (senderIds.length) {
+    const { data: profs } = await supabase.from("profiles").select("id, full_name").in("id", senderIds);
+    for (const row of profs ?? []) {
+      if (row.id && typeof row.full_name === "string" && row.full_name.trim()) {
+        namesById.set(row.id, row.full_name.trim());
+      }
+    }
+  }
 
   return (
     <section className="mx-auto max-w-2xl space-y-4">
@@ -65,11 +89,11 @@ export default async function ChatPage({ params }: { params: Promise<{ requestId
         currentUserId={profile.id}
         initialMessages={
           (messages ?? []).map((m) => ({
-            id: m.id,
+            id: Number(m.id),
             message: m.message,
             created_at: m.created_at,
             sender_id: m.sender_id,
-            sender_name: (m.profiles as { full_name?: string } | null)?.full_name ?? null
+            sender_name: namesById.get(m.sender_id) ?? null
           })) as Array<{
             id: number;
             message: string;

@@ -23,6 +23,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/client") ||
     pathname.startsWith("/master") ||
     pathname.startsWith("/admin") ||
+    pathname.startsWith("/account") ||
     pathname.startsWith("/chat") ||
     pathname.startsWith("/notifications");
 

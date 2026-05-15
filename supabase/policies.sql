@@ -56,6 +56,23 @@ with check (
   (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
 );
 
+drop policy if exists "profiles_read_chat_counterparty" on profiles;
+create policy "profiles_read_chat_counterparty"
+on profiles for select
+to authenticated
+using (
+  exists (
+    select 1
+    from assignments a
+    join requests r on r.id = a.request_id
+    join offers o on o.id = a.offer_id
+    where
+      (r.client_id = auth.uid() and o.master_id = profiles.id)
+      or
+      (o.master_id = auth.uid() and r.client_id = profiles.id)
+  )
+);
+
 create policy "client_can_manage_own_requests"
 on requests for all
 to authenticated

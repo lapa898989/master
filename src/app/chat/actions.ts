@@ -13,11 +13,14 @@ export async function sendMessageAction(formData: FormData) {
   if (!requestId || !message) return;
 
   const supabase = await createClient();
-  await supabase.from("request_messages").insert({
+  const { error } = await supabase.from("request_messages").insert({
     request_id: requestId,
     sender_id: profile.id,
     message
   });
+  if (error) {
+    throw new Error(`Не удалось отправить сообщение: ${error.message}`);
+  }
 
   revalidatePath(`/chat/${requestId}`);
 }

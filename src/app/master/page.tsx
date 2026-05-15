@@ -31,6 +31,9 @@ export default async function MasterDashboard() {
           <Link href="/notifications" className="stage-button-ghost">
             Уведомления
           </Link>
+          <Link href="/account/role" className="stage-button-ghost">
+            Сменить роль
+          </Link>
         </div>
       </div>
 

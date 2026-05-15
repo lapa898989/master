@@ -16,6 +16,16 @@ function pickNameFallback(name: unknown, senderId: string) {
   return senderId;
 }
 
+/** Supabase Realtime / bigint часто отдаёт id как string — без этого новые сообщения не появляются. */
+function parseMessageId(v: unknown): number | null {
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  if (typeof v === "string" && v.trim()) {
+    const n = Number(v);
+    if (Number.isFinite(n)) return n;
+  }
+  return null;
+}
+
 export function ChatThread({
   requestId,
   currentUserId,
@@ -26,8 +36,9 @@ export function ChatThread({
   initialMessages: ChatMessage[];
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [realtimeStatus, setRealtimeStatus] = useState<"connecting" | "subscribed" | "error">("connecting");
   const namesCacheRef = useRef<Map<string, string>>(new Map());
-  const seenIdsRef = useRef<Set<number>>(new Set(initialMessages.map((m) => m.id)));
+  const seenIdsRef = useRef<Set<number>>(new Set(initialMessages.map((m) => Number(m.id)).filter((n) => Number.isFinite(n))));
 
   const ordered = useMemo(() => {
     const copy = [...messages];
@@ -37,6 +48,7 @@ export function ChatThread({
 
   useEffect(() => {
     const supabase = createClient();
+    setRealtimeStatus("connecting");
 
     const ensureName = async (senderId: string, hint?: string | null) => {
       if (namesCacheRef.current.has(senderId)) return;
@@ -57,8 +69,8 @@ export function ChatThread({
         { event: "INSERT", schema: "public", table: "request_messages", filter: `request_id=eq.${requestId}` },
         async (payload) => {
           const row = payload.new as Partial<{ id: unknown; message: unknown; created_at: unknown; sender_id: unknown }> | null;
-          const id = typeof row?.id === "number" ? row.id : null;
-          if (!id) return;
+          const id = parseMessageId(row?.id);
+          if (id === null) return;
           if (seenIdsRef.current.has(id)) return;
 
           const senderId = typeof row?.sender_id === "string" ? row.sender_id : "";
@@ -81,7 +93,10 @@ export function ChatThread({
           ]);
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") setRealtimeStatus("subscribed");
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") setRealtimeStatus("error");
+      });
 
     return () => {
       supabase.removeChannel(channel);
@@ -90,6 +105,21 @@ export function ChatThread({
 
   return (
     <div className="space-y-2 p-4 glass-card">
+      {realtimeStatus !== "subscribed" ? (
+        <div className="rounded-lg border border-amber-600/20 bg-amber-50/60 p-3 text-sm text-amber-900">
+          {realtimeStatus === "connecting" ? (
+            <p>Подключаем обновления чата…</p>
+          ) : (
+            <>
+              <p className="font-medium">Онлайн-обновления чата не работают.</p>
+              <p className="mt-1 text-amber-800/90">
+                Проверьте переменные `NEXT_PUBLIC_SUPABASE_URL`/`NEXT_PUBLIC_SUPABASE_ANON_KEY` в `.env.local` и что в
+                публикацию `supabase_realtime` добавлена таблица `request_messages` (см. `supabase/migrations/20250508120000_realtime_core_tables.sql`).
+              </p>
+            </>
+          )}
+        </div>
+      ) : null}
       {ordered.length ? (
         ordered.map((msg) => {
           const name =

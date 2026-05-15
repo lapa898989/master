@@ -27,19 +27,25 @@ export function AutoOpenChatOnAccepted({ userId }: { userId: string }) {
           const row = payload.new as { id?: unknown; type?: unknown; href?: unknown } | null;
           if (!row || row.type !== "offer_accepted") return;
           if (typeof row.href !== "string") return;
-          if (typeof row.id !== "number") return;
+          const notifId =
+            typeof row.id === "number"
+              ? row.id
+              : typeof row.id === "string" && row.id.trim()
+                ? Number(row.id)
+                : NaN;
+          if (!Number.isFinite(notifId)) return;
           if (inFlight.current) return;
 
           // Если уже в этом чате — просто отметим прочитанным.
           if (pathname === row.href) {
             inFlight.current = true;
-            await supabase.from("notifications").update({ read_at: new Date().toISOString() }).eq("id", row.id).eq("user_id", userId);
+            await supabase.from("notifications").update({ read_at: new Date().toISOString() }).eq("id", notifId).eq("user_id", userId);
             inFlight.current = false;
             return;
           }
 
           inFlight.current = true;
-          await supabase.from("notifications").update({ read_at: new Date().toISOString() }).eq("id", row.id).eq("user_id", userId);
+          await supabase.from("notifications").update({ read_at: new Date().toISOString() }).eq("id", notifId).eq("user_id", userId);
           router.push(row.href);
           inFlight.current = false;
         }

@@ -70,6 +70,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                   <Link className="text-white/90 hover:text-white" href="/client/requests/new">
                     Создать
                   </Link>
+                  <Link className="text-white/90 hover:text-white" href="/account/role">
+                    Сменить роль
+                  </Link>
                 </>
               ) : null}
               {user && roleMeta === "master" ? (
@@ -82,6 +85,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                   </Link>
                   <Link className="text-white/90 hover:text-white" href="/master/offers">
                     Мои отклики
+                  </Link>
+                  <Link className="text-white/90 hover:text-white" href="/account/role">
+                    Сменить роль
                   </Link>
                 </>
               ) : null}
